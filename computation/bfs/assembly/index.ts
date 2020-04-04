@@ -2,6 +2,8 @@
 declare function consoleLog(arg0: string): void;
 declare function performanceNow(): f64;
 
+let seed = 49734321;
+
 // classes
 class Node {
     constructor(public starting: i32 = 0, public no_of_edges: i32 = 0) { }
@@ -30,7 +32,6 @@ const MIN_WEIGHT     = 1;
 const MAX_WEIGHT     = 1;
 
 function commonRandom(): i32 {
-  let seed = 49734321;
   // Robert Jenkins' 32 bit integer hash function.
   seed = ((seed + 0x7ed55d16) + (seed << 12))  & 0xffffffff;
   seed = ((seed ^ 0xc761c23c) ^ (seed >>> 19)) & 0xffffffff;
@@ -151,28 +152,5 @@ export function bfs(no_of_nodes: i32, verbose: bool): f64 {
     ++k;
   } while(stop);
   t2 = performanceNow();
-  // const traversal_time = t2 - t1;
-
-  // let total_cost = 0;
-  // for (let i=0; i<no_of_nodes; ++i) {
-  //   unchecked(total_cost += h_cost[i]);
-  // }
-  // if (no_of_nodes == expected_no_of_nodes) {
-  //   if (total_cost != expected_total_cost) {
-  //     consoleLog("ERROR: the total cost obtained for '" + no_of_nodes.toString() + "' nodes is '" + total_cost.toString() + "' while the expected cost is '" + expected_total_cost.toString() + "'");
-  //   }
-  // } else {
-  //   consoleLog("WARNING: no self-checking step for '" + no_of_nodes.toString() + "' nodes, only valid for '" + expected_no_of_nodes.toString() + "' nodes");
-  // }
-
-  // consoleLog("Init time     : " + init_time.toString() + " ms");
-  // consoleLog("AS traversal time: " + traversal_time.toString() + " ms");
-
-  // if (verbose) {
-  //   for (let i = 0; i < no_of_nodes; ++i) {
-  //     consoleLog(i.toString() + ") cost: " + unchecked(h_cost[i].toString()));
-  //   }
-  // }
-
   return t2 -t1;
 }

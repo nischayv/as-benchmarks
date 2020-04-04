@@ -19,7 +19,7 @@ const runBenchmark = async () => {
 
   for (let i = 0; i < 120; i++) {
     const as = asBindInstance.exports.bfs(200000)
-    const js = bfsGraph(200000, false)
+    const js = bfsGraph(200000)
     asBfsResults.push(as)
     jsBfsResults.push(js)
   }
