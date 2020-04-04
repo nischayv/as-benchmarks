@@ -1,17 +1,16 @@
 import { mean } from 'stats-lite'
 import Chart from 'chart.js'
 
-export const getBestCaseTime = (arr) => Math.min(...arr)
+const getBestCaseTime = (arr) => Math.min(...arr)
 
-export const getWorstCaseTime = (arr) => Math.max(...arr)
+const getWorstCaseTime = (arr) => Math.max(...arr)
 
-export const getAverageCaseTime = (arr) => mean(arr)
+const getAverageCaseTime = (arr) => mean(arr)
 
 export const generateRuntimeBarGraph = (as, js, type) => {
   const canvas = document.createElement('canvas')
   canvas.width = 800
   canvas.height = 500
-  canvas.style.backgroundColor ='rgb(255,255,255)'
   document.body.appendChild(canvas)
   let asData, jsData, labels
 
@@ -40,13 +39,13 @@ export const generateRuntimeBarGraph = (as, js, type) => {
       labels,
       datasets: [{
         label: 'Assemblyscript',
-        data: type === 'bar' ? asData : as,
+        data: asData,
         backgroundColor: 'rgba(54, 162, 235)',
         borderColor: 'rgba(54, 162, 235)',
         fill: type === 'bar'
       }, {
         label: 'JS',
-        data: type === 'bar' ? jsData : js,
+        data: jsData,
         backgroundColor: 'rgba(255, 99, 132)',
         borderColor: 'rgba(255, 99, 132)',
         fill: type === 'bar'

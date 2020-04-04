@@ -107,10 +107,10 @@ export function initializeGraph(no_of_nodes: i32): Graph {
   )
 }
 
-export function bfs(no_of_nodes: i32, verbose: bool): string {
+export function bfs(no_of_nodes: i32, verbose: bool): f64 {
   const expected_no_of_nodes = 3000000;
   const expected_total_cost = 26321966;
-  let t1 = performanceNow();
+  let t1: f64, t2: f64;
   const inits = initializeGraph(no_of_nodes);
   const h_graph_nodes = inits.h_graph_nodes;
   const h_graph_mask = inits.h_graph_mask;
@@ -118,8 +118,6 @@ export function bfs(no_of_nodes: i32, verbose: bool): string {
   const h_graph_visited = inits.h_graph_visited;
   const h_cost = inits.h_cost;
   const h_graph_edges = inits.h_graph_edges;
-  let t2 = performanceNow();
-  const init_time = t2 - t1;
 
   let k = 0;
   let stop: boolean;
@@ -129,11 +127,11 @@ export function bfs(no_of_nodes: i32, verbose: bool): string {
     stop = false;
 
     for(let tid = 0; tid < no_of_nodes; ++tid) {
-      if (h_graph_mask[tid]) {
+      if (unchecked(h_graph_mask[tid])) {
         unchecked(h_graph_mask[tid] = false);
-        const cost = h_cost[tid];
-        for (let i = unchecked(h_graph_nodes[tid].starting); i < (unchecked(h_graph_nodes[tid].no_of_edges + h_graph_nodes[tid].starting)); ++i) {
-          const id = h_graph_edges[i];
+        const cost = unchecked(h_cost[tid]);
+        for (let i = unchecked(h_graph_nodes[tid].starting); i < (unchecked(h_graph_nodes[tid].no_of_edges) + unchecked(h_graph_nodes[tid].starting)); ++i) {
+          const id = unchecked(h_graph_edges[i]);
           if (!unchecked(h_graph_visited[id])) {
             unchecked(h_cost[id] = cost + 1);
             unchecked(h_updating_graph_mask[id] = true);
@@ -153,12 +151,12 @@ export function bfs(no_of_nodes: i32, verbose: bool): string {
     ++k;
   } while(stop);
   t2 = performanceNow();
-  const traversal_time = t2 - t1;
+  // const traversal_time = t2 - t1;
 
-  let total_cost = 0;
-  for (let i=0; i<no_of_nodes; ++i) {
-    unchecked(total_cost += h_cost[i]);
-  }
+  // let total_cost = 0;
+  // for (let i=0; i<no_of_nodes; ++i) {
+  //   unchecked(total_cost += h_cost[i]);
+  // }
   // if (no_of_nodes == expected_no_of_nodes) {
   //   if (total_cost != expected_total_cost) {
   //     consoleLog("ERROR: the total cost obtained for '" + no_of_nodes.toString() + "' nodes is '" + total_cost.toString() + "' while the expected cost is '" + expected_total_cost.toString() + "'");
@@ -167,14 +165,14 @@ export function bfs(no_of_nodes: i32, verbose: bool): string {
   //   consoleLog("WARNING: no self-checking step for '" + no_of_nodes.toString() + "' nodes, only valid for '" + expected_no_of_nodes.toString() + "' nodes");
   // }
 
-  consoleLog("Init time     : " + init_time.toString() + " ms");
-  consoleLog("Traversal time: " + traversal_time.toString() + " ms");
+  // consoleLog("Init time     : " + init_time.toString() + " ms");
+  // consoleLog("AS traversal time: " + traversal_time.toString() + " ms");
 
-  if (verbose) {
-    for (let i = 0; i < no_of_nodes; ++i) {
-      consoleLog(i.toString() + ") cost: " + unchecked(h_cost[i].toString()));
-    }
-  }
+  // if (verbose) {
+  //   for (let i = 0; i < no_of_nodes; ++i) {
+  //     consoleLog(i.toString() + ") cost: " + unchecked(h_cost[i].toString()));
+  //   }
+  // }
 
-  return "Graph with nodes: " + no_of_nodes.toString() + " took " + traversal_time.toString() + " ms";
+  return t2 -t1;
 }

@@ -1,48 +1,31 @@
-// https://github.com/torch2424/wasm-by-example/blob/master/demo-util/
+import asBind from 'as-bind/dist/as-bind.esm'
+import { generateRuntimeBarGraph } from './chart'
+import { bfsGraph } from './js'
 
-import asBind from 'as-bind/dist/as-bind.esm';
-import Benchmark from 'benchmark';
-import { initializeGraph, bfsGraph } from './js';
-const suite = new Benchmark.Suite;
-
-const runWasmAdd = async () => {
+const runBenchmark = async () => {
   // Instantiate our wasm module
-  // const wasmModule = await wasmBrowserInstantiate('build/untouched.wasm');
-  const wasm = fetch('build/untouched.wasm');
+  const wasm = fetch('build/optimized.wasm')
   const asBindInstance = await asBind.instantiate(wasm, {
     index: {
       consoleLog: message => {
-        console.log(message);
+        console.log(message)
       },
       performanceNow: () => performance.now()
     }
-  });
+  })
 
-  let webAssemblyResult;
-  let jsResult;
+  const asBfsResults = []
+  const jsBfsResults = []
 
-  // suite
-  //   .add('Wasm BFS Init and Traversal', () => {
-      asBindInstance.exports.bfs(1000)
-    // })
-    // .add('JS BFS Init and Traversal', () => {
-      bfsGraph(1000, false)
-    // })
-    // .on('cycle', function(event) {
-    //   console.log(String(event.target));
-    // })
-    // .on('complete', function() {
-    //   console.log('Fastest is ' + this.filter('fastest').map('name'));
-    // })
-    // .run({ 'async': true })
+  for (let i = 0; i < 120; i++) {
+    const as = asBindInstance.exports.bfs(200000)
+    const js = bfsGraph(200000, false)
+    asBfsResults.push(as)
+    jsBfsResults.push(js)
+  }
 
-  // Set the results onto the body
-  // const wasmElement = document.createElement('div')
-  // const jsElement = document.createElement('div')
-  // wasmElement.innerText = `Webassembly: ${webAssemblyResult}`
-  // jsElement.innerText = `JS: ${jsResult}`
-  // document.body.appendChild(wasmElement);
-  // document.body.appendChild(jsElement);
-};
+  generateRuntimeBarGraph(asBfsResults, jsBfsResults,'bar')
+  generateRuntimeBarGraph(asBfsResults, jsBfsResults, 'line')
+}
 
-runWasmAdd();
+runBenchmark()

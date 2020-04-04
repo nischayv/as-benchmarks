@@ -44,7 +44,7 @@ export function bfsGraph(no_of_nodes, verbose) {
   }
   const expected_no_of_nodes = 3000000;
   const expected_total_cost = 26321966;
-  let t1 = performance.now();
+  let t1, t2;
   const inits = initializeGraph(no_of_nodes);
   const h_graph_nodes = inits.h_graph_nodes;
   const h_graph_mask = inits.h_graph_mask;
@@ -52,8 +52,6 @@ export function bfsGraph(no_of_nodes, verbose) {
   const h_graph_visited = inits.h_graph_visited;
   const h_cost = inits.h_cost;
   const h_graph_edges = inits.h_graph_edges;
-  let t2 = performance.now();
-  const init_time = t2 - t1;
 
   let k = 0;
   let stop;
@@ -89,12 +87,12 @@ export function bfsGraph(no_of_nodes, verbose) {
   }
   while(stop);
   t2 = performance.now();
-  const traversal_time = t2 - t1;
+  // const traversal_time = t2 - t1;
 
-  let total_cost = 0;
-  for (let i=0; i<no_of_nodes; ++i) {
-    total_cost += h_cost[i];
-  }
+  // let total_cost = 0;
+  // for (let i=0; i<no_of_nodes; ++i) {
+  //   total_cost += h_cost[i];
+  // }
   // if (no_of_nodes == expected_no_of_nodes) {
   //   if (total_cost != expected_total_cost) {
   //     throw new Error("ERROR: the total cost obtained for '" + no_of_nodes + "' nodes is '" + total_cost + "' while the expected cost is '" + expected_total_cost + "'");
@@ -103,8 +101,8 @@ export function bfsGraph(no_of_nodes, verbose) {
   //   console.log("WARNING: no self-checking step for '" + no_of_nodes + "' nodes, only valid for '" + expected_no_of_nodes + "' nodes");
   // }
   //
-  console.log("Init time     : " + init_time + " ms");
-  console.log("Traversal time: " + traversal_time + " ms");
+  // console.log("Init time     : " + init_time + " ms");
+  // console.log("JS traversal time: " + traversal_time + " ms");
   //
   // if (verbose) {
   //   for (let i = 0; i < no_of_nodes; ++i) {
@@ -112,10 +110,10 @@ export function bfsGraph(no_of_nodes, verbose) {
   //   }
   // }
 
-  return "Graph with nodes: " + no_of_nodes + " took " + traversal_time + " ms";
+  return t2 - t1;
 }
 
-export function initializeGraph(no_of_nodes) {
+function initializeGraph(no_of_nodes) {
   const h_graph_nodes = new Array(no_of_nodes);
   const h_graph_mask = new Uint8Array(no_of_nodes);
   const h_updating_graph_mask = new Uint8Array(no_of_nodes);
