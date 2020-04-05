@@ -1,12 +1,12 @@
-// The entry file of your WebAssembly module.
-declare function consoleLog(arg0: string): void;
-declare function performanceNow(): f64;
+import { commonRandom } from "./common"
 
-let seed = 49734321;
+// The entry file of your WebAssembly module.
+declare function consoleLog<T>(arg0: T): void;
+declare function performanceNow(): f64;
 
 // classes
 class Node {
-    constructor(public starting: i32 = 0, public no_of_edges: i32 = 0) { }
+  constructor(public starting: i32 = 0, public no_of_edges: i32 = 0) { }
 }
 
 class Edge {
@@ -24,23 +24,10 @@ class Graph {
     ) { }
 }
 
-const MIN_NODES      = 20;
-const MAX_NODES      = 1<<31;
 const MIN_EDGES      = 2;
 const MAX_INIT_EDGES = 4;
 const MIN_WEIGHT     = 1;
 const MAX_WEIGHT     = 1;
-
-function commonRandom(): i32 {
-  // Robert Jenkins' 32 bit integer hash function.
-  seed = ((seed + 0x7ed55d16) + (seed << 12))  & 0xffffffff;
-  seed = ((seed ^ 0xc761c23c) ^ (seed >>> 19)) & 0xffffffff;
-  seed = ((seed + 0x165667b1) + (seed << 5))   & 0xffffffff;
-  seed = ((seed + 0xd3a2646c) ^ (seed << 9))   & 0xffffffff;
-  seed = ((seed + 0xfd7046c5) + (seed << 3))   & 0xffffffff;
-  seed = ((seed ^ 0xb55a4f09) ^ (seed >>> 16)) & 0xffffffff;
-  return seed;
-}
 
 export function initializeGraph(no_of_nodes: i32): Graph {
   const h_graph_nodes = new StaticArray<Node>(no_of_nodes);
@@ -109,8 +96,6 @@ export function initializeGraph(no_of_nodes: i32): Graph {
 }
 
 export function bfs(no_of_nodes: i32, verbose: bool): f64 {
-  const expected_no_of_nodes = 3000000;
-  const expected_total_cost = 26321966;
   let t1: f64, t2: f64;
   const inits = initializeGraph(no_of_nodes);
   const h_graph_nodes = inits.h_graph_nodes;
@@ -131,7 +116,9 @@ export function bfs(no_of_nodes: i32, verbose: bool): f64 {
       if (unchecked(h_graph_mask[tid])) {
         unchecked(h_graph_mask[tid] = false);
         const cost = unchecked(h_cost[tid]);
-        for (let i = unchecked(h_graph_nodes[tid].starting); i < (unchecked(h_graph_nodes[tid].no_of_edges) + unchecked(h_graph_nodes[tid].starting)); ++i) {
+        const start = unchecked(h_graph_nodes[tid].starting);
+        const end = unchecked(h_graph_nodes[tid].no_of_edges + h_graph_nodes[tid].starting);
+        for (let i = start; i < end; ++i) {
           const id = unchecked(h_graph_edges[i]);
           if (!unchecked(h_graph_visited[id])) {
             unchecked(h_cost[id] = cost + 1);
@@ -152,5 +139,5 @@ export function bfs(no_of_nodes: i32, verbose: bool): f64 {
     ++k;
   } while(stop);
   t2 = performanceNow();
-  return t2 -t1;
+  return t2 - t1;
 }
