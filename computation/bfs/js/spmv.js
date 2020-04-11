@@ -23,33 +23,13 @@
  * SOFTWARE.
  */
 
-if (typeof performance === "undefined") {
-  performance = Date;
-}
+import { commonRandomJS } from './common'
 
-const commonRandom = (function() {
-  let seed = 49734321;
-  return function() {
-    // Robert Jenkins' 32 bit integer hash function.
-    seed = ((seed + 0x7ed55d16) + (seed << 12))  & 0xffffffff;
-    seed = ((seed ^ 0xc761c23c) ^ (seed >>> 19)) & 0xffffffff;
-    seed = ((seed + 0x165667b1) + (seed << 5))   & 0xffffffff;
-    seed = ((seed + 0xd3a2646c) ^ (seed << 9))   & 0xffffffff;
-    seed = ((seed + 0xfd7046c5) + (seed << 3))   & 0xffffffff;
-    seed = ((seed ^ 0xb55a4f09) ^ (seed >>> 16)) & 0xffffffff;
-    return seed;
-  };
-})();
-
-const commonRandomJS = function () {
-  return Math.abs(commonRandom());
-}
-
-// const ArrayOld = Array;
 const NewArray = function(dim) {
-  var xs = new Array(dim);
-  for (var i = 0; i < dim; ++i)
+  const xs = new Array(dim);
+  for (let i = 0; i < dim; ++i) {
     xs[i] = 0;
+  }
   return xs;
 };
 
@@ -57,16 +37,14 @@ const NewArray = function(dim) {
  * found at  https://github.com/jamesbloomer/node-ziggurat
  */
 function Ziggurat() {
-
-  var jsr = 123456789;
-
-  var wn = NewArray(128);
-  var fn = NewArray(128);
-  var kn = NewArray(128);
+  let jsr = 123456789;
+  const wn = NewArray(128);
+  const fn = NewArray(128);
+  const kn = NewArray(128);
 
   function RNOR() {
-    var hz = SHR3();
-    var iz = hz & 127;
+    const hz = SHR3();
+    const iz = hz & 127;
     return (Math.abs(hz) < kn[iz]) ? hz * wn[iz] : nfix(hz, iz);
   }
 
@@ -75,23 +53,23 @@ function Ziggurat() {
   }
 
   function nfix(hz, iz) {
-    var r = 3.442619855899;
-    var r1 = 1.0 / r;
-    var x;
-    var y;
+    const r = 3.442619855899;
+    const r1 = 1.0 / r;
+    let x;
+    let y;
     while(true) {
       x = hz * wn[iz];
-      if( iz == 0 ) {
+      if(iz === 0) {
         x = (-Math.log(UNI()) * r1);
         y = -Math.log(UNI());
-        while( y + y < x * x) {
+        while(y + y < x * x) {
           x = (-Math.log(UNI()) * r1);
           y = -Math.log(UNI());
         }
         return ( hz > 0 ) ? r+x : -r-x;
       }
 
-      if( fn[iz] + UNI() * (fn[iz-1] - fn[iz]) < Math.exp(-0.5 * x * x) ) {
+      if(fn[iz] + UNI() * (fn[iz-1] - fn[iz]) < Math.exp(-0.5 * x * x)) {
         return x;
       }
       hz = SHR3();
@@ -104,8 +82,8 @@ function Ziggurat() {
   }
 
   function SHR3() {
-    var jz = jsr;
-    var jzr = jsr;
+    let jz = jsr;
+    let jzr = jsr;
     jzr ^= (jzr << 13);
     jzr ^= (jzr >>> 17);
     jzr ^= (jzr << 5);
@@ -121,12 +99,12 @@ function Ziggurat() {
     // seed generator based on current time
     // jsr ^= new Date().getTime();
 
-    var m1 = 2147483648.0;
-    var dn = 3.442619855899;
-    var tn = dn;
-    var vn = 9.91256303526217e-3;
+    const m1 = 2147483648.0;
+    let dn = 3.442619855899;
+    let tn = dn;
+    const vn = 9.91256303526217e-3;
 
-    var q = vn / Math.exp(-0.5 * dn * dn);
+    const q = vn / Math.exp(-0.5 * dn * dn);
     kn[0] = Math.floor((dn/q)*m1);
     kn[1] = 0;
 
@@ -136,7 +114,7 @@ function Ziggurat() {
     fn[0] = 1.0;
     fn[127] = Math.exp(-0.5 * dn * dn);
 
-    for(var i = 126; i >= 1; i--) {
+    for(let i = 126; i >= 1; i--) {
       dn = Math.sqrt(-2.0 * Math.log( vn / dn + Math.exp( -0.5 * dn * dn)));
       kn[i+1] = Math.floor((dn/tn)*m1);
       tn = dn;
@@ -147,7 +125,7 @@ function Ziggurat() {
 
   zigset();
 }
-var gaussian = new Ziggurat();
+const gaussian = new Ziggurat();
 
 function randNorm() {
   return gaussian.nextGaussian();
@@ -156,12 +134,12 @@ function randNorm() {
 function genRand(lb, hb) {
   if(lb < 0 || hb < 0 || hb < lb) return 0;
 
-  var range = hb - lb + 1;
+  const range = hb - lb + 1;
   return (rand() % range) + lb;
 }
 
 function rand() {
-  var n = commonRandomJS() * (Math.pow(2, 32) - 1);
+  const n = commonRandomJS() * (Math.pow(2, 32) - 1);
   return Math.floor(n) ? Math.floor(n) : Math.ceil(n);
 }
 
@@ -169,18 +147,18 @@ function randf() {
   return 1.0 - 2.0 * (rand() / (2147483647 + 1.0));
 }
 
-function sortArray(a, start, finish) { // TA
-  var t = Array.prototype.sort.call(a.subarray(start, finish), function(a, b) {return a-b;});
-  for(var i = start; i<finish; ++i) {
+function sortSubArray(a, start, finish) { // TA
+  const t = a.subarray(start, finish).sort();
+  for(let i = start; i < finish; ++i) {
     a[i] = t[i-start];
   }
 }
 
 function generateRandomCSR(dim, density, stddev) {
-  var i, j, nnz_ith_row, nnz, update_interval, rand_col;
-  var nnz_ith_row_double, nz_error, nz_per_row_doubled, high_bound;
-  var used_cols;
-  var m = {};
+  let nnz_ith_row, rand_col;
+  let nnz_ith_row_double, nz_per_row_doubled, high_bound;
+  let used_cols;
+  const m = {};
 
   // lets figure out how many non zero entries we have
   m.num_rows = dim;
@@ -194,104 +172,93 @@ function generateRandomCSR(dim, density, stddev) {
   m.Acol = new Uint32Array(m.num_nonzeros); // TA
 
   m.Arow[0] = 0;
-  nnz = 0;
   nz_per_row_doubled = 2*m.nz_per_row;
   high_bound = Math.min(m.num_cols, nz_per_row_doubled);
   used_cols = new Int8Array(m.num_cols);
 
-  update_interval = Math.round(m.num_rows/10.0);
-  for(i=0; i<m.num_rows; ++i) {
-    if(i % update_interval == 0) console.log(i + " rows of " + m.num_rows +
-      " generated. Continuing...");
-
+  for(let i = 0; i < m.num_rows; ++i) {
     nnz_ith_row_double = randNorm();
     nnz_ith_row_double *= m.stdev;
     nnz_ith_row_double += m.nz_per_row;
 
-    if(nnz_ith_row_double < 0) nnz_ith_row = 0;
-    else if (nnz_ith_row_double > high_bound) nnz_ith_row = high_bound;
-    else nnz_ith_row = Math.abs(Math.round(nnz_ith_row_double));
+    if(nnz_ith_row_double < 0) {
+      nnz_ith_row = 0;
+    } else if (nnz_ith_row_double > high_bound) {
+      nnz_ith_row = high_bound;
+    } else {
+      nnz_ith_row = Math.abs(Math.round(nnz_ith_row_double));
+    }
 
     m.Arow[i+1] = m.Arow[i] + nnz_ith_row;
 
     // no realloc in javascript typed arrays
     if(m.Arow[i+1] > m.num_nonzeros) {
-      var temp =  m.Acol;
+      const temp =  m.Acol;
       m.Acol = new Int32Array(m.Arow[i+1]); // TA
       m.Acol.set(temp, 0);
     }
 
-    for(j=0; j<m.num_cols; ++j) {
+    for(let j=0; j<m.num_cols; ++j) {
       used_cols[j] = 0;
     }
 
-    for(j=0; j<nnz_ith_row; ++j) {
+    for(let j = 0; j < nnz_ith_row; ++j) {
       rand_col = genRand(0, m.num_cols -1);
       if(used_cols[rand_col]) {
         --j;
-      }
-      else {
+      } else {
         m.Acol[m.Arow[i]+j] = rand_col;
         used_cols[rand_col] = 1;
       }
     }
 
     // sort the column entries
-    sortArray(m.Acol, m.Arow[i], m.Arow[i+1]); // TA
+    sortSubArray(m.Acol, m.Arow[i], m.Arow[i+1]);
   }
 
-  nz_error = (Math.abs(m.num_nonzeros - m.Arow[m.num_rows]))/m.num_nonzeros;
-  if(nz_error >= 0.5)
-    console.log("WARNING: Actual NNZ differs from Theoretical NNZ by" +
-      nz_error*100+ "%\n");
-
   m.num_nonzeros = m.Arow[m.num_rows];
-  console.log("Actual NUM_nonzeros: " + m.num_nonzeros + "\n");
-
   m.density_perc = m.num_nonzeros*100.0/(m.num_cols*m.num_rows);
   m.density_ppm = Math.round(m.density_perc * 10000.0);
-  console.log("Actual Density: " + m.density_perc + "% ppm: " + m.density_ppm);
 
   m.Ax = new Float32Array(m.num_nonzeros);
-  for(i=0; i<m.num_nonzeros; ++i) {
+  for(let i=0; i<m.num_nonzeros; ++i) {
     m.Ax[i] = randf();
-    while(m.Ax[i] === 0.0)
+    while(m.Ax[i] === 0.0) {
       m.Ax[i] = randf();
+    }
   }
   return m;
 }
 
 function spmv_csr(matrix, dim, rowv, colv, v, y, out) {
-  var row, row_start, row_end, jj;
-  var sum = 0;
+  let row_start, row_end;
+  let sum = 0;
 
-  for(row=0; row< dim; ++row){
-    sum = y[row];
-    row_start = rowv[row];
-    row_end = rowv[row+1];
+  for(let i = 0; i < dim; ++i){
+    sum = y[i];
+    row_start = rowv[i];
+    row_end = rowv[i+1];
 
-    for(jj = row_start; jj<row_end; ++jj){
-      sum += matrix[jj] * v[colv[jj]];
+    for(let j = row_start; j < row_end; ++j){
+      sum += matrix[j] * v[colv[j]];
     }
 
-    out[row] = sum;
+    out[i] = sum;
   }
 }
 
-export function spmvRunJs(dim, density, stddev, iterations) {
-  var t1 =  performance.now();
-  var m = generateRandomCSR(dim, density, stddev);
-  var v = new Float32Array(dim);
-  var y = new Float32Array(dim);
-  var out = new Float32Array(dim);
+export function spmv(dim = 25000, density = 1000, stddev = 0.005, iterations = 50) {
+  const m = generateRandomCSR(dim, density, stddev);
+  const v = new Float32Array(dim);
+  const y = new Float32Array(dim);
+  const out = new Float32Array(dim);
   Array.prototype.forEach.call(v, function(n, i, a) { a[i] = randf(); });
-  var t2 =  performance.now();
 
-  console.log("The total time for the spmv generation in JS is " + (t2-t1)/1000 + " seconds");
+  const t1 =  performance.now();
+  for(let i = 0; i < iterations; ++i){
+    spmv_csr(m.Ax, dim, m.Arow, m.Acol, v, y, out);
+  }
+  const t2 = performance.now();
 
-  var t3 =  performance.now();
-  for(var i = 0; i < iterations; ++i) spmv_csr(m.Ax, dim, m.Arow, m.Acol, v, y, out);
-  var t4 = performance.now();
-
-  return (t4 - t3) / 1000;
+  return t2 - t1;
 }

@@ -11,3 +11,7 @@ export const commonRandom = (function() {
     return seed;
   };
 })();
+
+export const commonRandomJS = function () {
+  return Math.abs(commonRandom());
+}

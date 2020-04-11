@@ -1,13 +1,4 @@
-declare function consoleLog(msg: string): void;
-declare function performanceNow(): f64;
-export namespace console {
-  export function log(msg: string): void { consoleLog(msg) }
-}
-export namespace performance {
-  export function now(): f64 { return performanceNow() }
-}
-
-let seed: i32 = 49734321;
+import { performance, console, commonRandomJS } from './common';
 
 // classes
 class Polar {
@@ -23,22 +14,6 @@ class PolarArray {
     public i: Float64Array
   ) { }
 }
-
-function commonRandom(): i32 {
-  // Robert Jenkins' 32 bit integer hash function.
-  seed = ((seed + 0x7ed55d16) + (seed << 12))  & 0xffffffff;
-  seed = ((seed ^ 0xc761c23c) ^ (seed >>> 19)) & 0xffffffff;
-  seed = ((seed + 0x165667b1) + (seed << 5))   & 0xffffffff;
-  seed = ((seed + 0xd3a2646c) ^ (seed << 9))   & 0xffffffff;
-  seed = ((seed + 0xfd7046c5) + (seed << 3))   & 0xffffffff;
-  seed = ((seed ^ 0xb55a4f09) ^ (seed >>> 16)) & 0xffffffff;
-  return seed;
-}
-
-const commonRandomJS = function (): f64 {
-  const commonRand = commonRandom();
-  return Math.abs(commonRand);
-};
 
 function complexPolar(r: f64, t: f64): Polar {
   return new Polar(r*Math.cos(t), r*Math.sin(t));
@@ -101,7 +76,7 @@ function transpose(m: StaticArray<PolarArray>): void {
   const N = m.length;
 
   for(let i = 0; i < N; ++i) {
-    let mi   = unchecked(m[i]);
+    let mi = unchecked(m[i]);
     let mi_r = mi.r;
     let mi_i = mi.i;
 
@@ -163,37 +138,13 @@ function randomComplexMatrix(n: i32): StaticArray<PolarArray> {
   return M;
 }
 
-
-// function printComplexArray(r: Float64Array, i: Float64Array): void { // TA
-//   const a = [];
-//   const len = r.length;
-//   for(let j=0; j < len; ++j) {
-//     a[j] = r[j].toFixed(6) + " + " + i[j].toFixed(6) + "i";
-//   }
-//   console.log(a.join("\n"));
-// }
-
-// function printComplexMatrix(m: Array<PolarArray>): void {
-//   const len = m.length;
-//   for(let i = 0; i < len; ++i) {
-//     printComplexArray(m[i]["r"], m[i]["i"]);
-//   }
-// }
-
-
-export function runFFT(twoExp: i32): f64 {
-  if (twoExp < 0 || twoExp > 30) {
-    console.log("ERROR: invalid exponent of '" + twoExp.toString() + "' for input size");
-  }
-
+export function fft(): f64 {
+  const twoExp: i32 = 8;
   const n = 1 << twoExp;
-  // var data1D = randomComplexArray(n);
   const data2D = randomComplexMatrix(n);
 
   const t1 = performance.now();
-  // const results2D = fft2D(data2D);
   fft2D(data2D);
   const t2 = performance.now();
-  console.log("The total 2D FFT time for " + n.toString() + " x " + n.toString() + " was " + ((t2-t1)).toString() + " ms");
-  return (t2 - t1);
+  return t2 - t1;
 }
