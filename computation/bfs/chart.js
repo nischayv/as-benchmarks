@@ -34,6 +34,15 @@ const colors = [
   'rgba(255, 99, 132)'
 ]
 
+export const toggleSpinner = () => {
+  const spinner = document.getElementById('spinner')
+  if (spinner.style.display === 'none') {
+    spinner.style.display = 'block'
+  } else {
+    spinner.style.display = 'none'
+  }
+}
+
 export const generateBarGraph = (title, labels, data) => {
   const canvas = document.createElement('canvas')
   canvas.width = 500
@@ -46,13 +55,13 @@ export const generateBarGraph = (title, labels, data) => {
       labels,
       datasets: [{
         label: 'Assemblyscript',
-        data: data.slice(0, 5),
+        data: data.slice(0, data.length / 2),
         backgroundColor: 'rgba(54, 162, 235)',
         borderColor: 'rgba(54, 162, 235)',
         fill: true
       }, {
         label: 'Javascript',
-        data: data.slice(5),
+        data: data.slice(data.length / 2),
         backgroundColor: 'rgba(255, 99, 132)',
         borderColor: 'rgba(255, 99, 132)',
         fill: true

@@ -1,6 +1,26 @@
-import { generateBarGraph, generateLineGraph } from './chart'
+import { generateBarGraph, generateLineGraph, toggleSpinner } from './chart'
 import jsFunctions from './js'
 import { mean } from 'stats-lite'
+
+let wasmInstance;
+
+const fetchWasm = async () => {
+  // Instantiate our wasm module
+  const wasm = fetch('build/optimized.wasm')
+  wasmInstance = await WebAssembly.instantiateStreaming(wasm, {
+    env: {
+      abort(_msg, _file, line, column) {
+        console.error(`Abort called at ${_file}:${line}:${column}`)
+      }
+    },
+    common: {
+      consoleLog: message => {
+        console.log(message)
+      },
+      performanceNow: () => performance.now()
+    }
+  })
+}
 
 const getAverageCaseTime = (arr) => mean(arr)
 
@@ -49,24 +69,7 @@ const generateCharts = (wasmInstance) => {
   generateLineGraph('spmv', labels2, [spmvResults.as, spmvResults.js])
 }
 
-
-const runBenchmark = async () => {
-  // Instantiate our wasm module
-  const wasm = fetch('build/optimized.wasm')
-  const wasmInstance = await WebAssembly.instantiateStreaming(wasm, {
-    env: {
-      abort(_msg, _file, line, column) {
-        console.error(`Abort called at ${_file}:${line}:${column}`)
-      }
-    },
-    common: {
-      consoleLog: message => {
-        console.log(message)
-      },
-      performanceNow: () => performance.now()
-    }
-  })
-
+export const runBenchmark = () => {
   // Benchmark to test how bfs behaves as input size increase
   // Very time intensive so commenting for now
   // Result is linear increase but slope of as is less than js
@@ -89,7 +92,9 @@ const runBenchmark = async () => {
   //
   // generateRuntimeBarGraph(asBfsResults, jsBfsResults, 'line', 1000)
 
+  toggleSpinner()
   generateCharts(wasmInstance)
+  toggleSpinner()
 }
 
-runBenchmark()
+fetchWasm()
