@@ -50,7 +50,7 @@ function randomMatrix(matrix) {
     }
   }
 
-  for (let i = 0; i < size; ++i){
+  for (let i = 0; i < size; ++i) {
     for (let j = 0; j < size; ++j) {
       let sum = 0;
       for (let k = 0; k < size; k++) {
@@ -61,7 +61,7 @@ function randomMatrix(matrix) {
   }
 }
 
-function performLud(matrix, size){
+function performLud(matrix, size) {
   let sum;
 
   for(let i = 0; i < size; ++i) {

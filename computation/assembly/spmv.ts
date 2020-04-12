@@ -243,12 +243,12 @@ function spmv_csr(matrix: Float32Array, dim: i32, rowv: Uint32Array, colv: Uint3
   let row_start: i32, row_end: i32;
   let sum: f32 = 0;
 
-  for(let i = 0; i < dim; ++i){
+  for(let i = 0; i < dim; ++i) {
     unchecked(sum = y[i]);
     unchecked(row_start = rowv[i]);
     unchecked(row_end = rowv[i+1]);
 
-    for(let j = row_start; j < row_end; ++j){
+    for(let j = row_start; j < row_end; ++j) {
       unchecked(sum += matrix[j] * v[colv[j]]);
     }
     unchecked(out[i] = sum);

@@ -3,24 +3,24 @@ import { commonRandom } from './common';
 const d_factor = 0.85; //damping factor
 
 // generates an array of random pages and their links
-function random_pages(n, noutlinks, divisor){
+function random_pages(n, noutlinks, divisor) {
   const pages = [];  // matrix cell i,j means link from j->i
   let k;
   for (let i = 0; i < n; i++) {
     pages[i] = new Int32Array(n);
   }
 
-  for(let i = 0; i < n; i++){
+  for(let i = 0; i < n; i++) {
     noutlinks[i] = 0;
-    for(let j = 0; j < n; ++j){
-      if(i!==j && (Math.abs(commonRandom())%divisor === 0)){
+    for(let j = 0; j < n; ++j) {
+      if(i!==j && (Math.abs(commonRandom())%divisor === 0)) {
         pages[i][j] = 1;
         noutlinks[i] += 1;
       }
     }
 
     // the case with no outlinks is afunctioned
-    if(noutlinks[i] === 0){
+    if(noutlinks[i] === 0) {
       do { k = Math.abs(commonRandom()) % n; } while ( k === i);
       pages[i][k] = 1;
       noutlinks[i] = 1;
@@ -29,29 +29,29 @@ function random_pages(n, noutlinks, divisor){
   return pages;
 }
 
-function init_array(a, n, val){
-  for(let i = 0; i < n; ++i){
+function init_array(a, n, val) {
+  for(let i = 0; i < n; ++i) {
     a[i] = val;
   }
 }
 
-function map_page_rank(pages, page_ranks, maps, noutlinks, n){
-  for(let i = 0; i < n; ++i){
+function map_page_rank(pages, page_ranks, maps, noutlinks, n) {
+  for(let i = 0; i < n; ++i) {
     const outbound_rank = page_ranks[i]/noutlinks[i];
-    for(let j = 0; j < n; ++j){
+    for(let j = 0; j < n; ++j) {
       maps[i][j] = pages[i][j] === 0 ? 0 : pages[i][j]*outbound_rank;
     }
   }
 }
 
-function reduce_page_rank(page_ranks, maps, n){
+function reduce_page_rank(page_ranks, maps, n) {
   let dif = 0.0;
   let new_rank, old_rank;
 
-  for(let j=0; j<n; ++j){
+  for(let j=0; j<n; ++j) {
     old_rank = page_ranks[j];
     new_rank = 0.0;
-    for(let i=0; i<n; ++i){
+    for(let i=0; i<n; ++i) {
       new_rank += maps[i][j];
     }
 
@@ -88,7 +88,7 @@ export function pagerank(n = 1000, iter = 10, thresh = 0.00000001, divisor = 100
   }
 
   const t1 = performance.now();
-  for(t=1; t <= iter && max_diff >= thresh; ++t){
+  for(t=1; t <= iter && max_diff >= thresh; ++t) {
     map_page_rank(pages, page_ranks, maps, noutlinks, n);
     max_diff = reduce_page_rank(page_ranks, maps, n);
 

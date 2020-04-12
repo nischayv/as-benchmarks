@@ -92,7 +92,7 @@ export function pagerank(): f64 {
 
   pages = random_pages(n, noutlinks, divisor);
 
-  for(let i=0; i<n; ++i){
+  for(let i=0; i<n; ++i) {
     unchecked(page_ranks[i] = 1.0/n);
   }
 

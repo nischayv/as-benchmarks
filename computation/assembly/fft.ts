@@ -36,7 +36,7 @@ function fftSimple(r: Float64Array, i: Float64Array): PolarArray {
   const dr = new Float64Array(N/2);
   const di = new Float64Array(N/2);
 
-  for(let k=0; k < len; ++k){
+  for(let k=0; k < len; ++k) {
     unchecked(er[k] = r[2*k]);
     unchecked(ei[k] = i[2*k]);
     unchecked(dr[k] = r[2*k + 1]);
@@ -108,7 +108,7 @@ function fft2D(m: StaticArray<PolarArray>): StaticArray<PolarArray> {
   }
   transpose(M);
 
-  for(let i=0; i < len; ++i){
+  for(let i=0; i < len; ++i) {
     const r_array = unchecked(M[i].r);
     const i_array = unchecked(M[i].i);
     unchecked(M[i] = fftSimple(r_array, i_array));
@@ -122,7 +122,7 @@ function randomComplexArray(n: i32): PolarArray {
   const R = new Float64Array(n);
   const I = new Float64Array(n);
 
-  for(let i = 0; i < n; ++i){
+  for(let i = 0; i < n; ++i) {
     unchecked(R[i] = commonRandomJS()*2 - 1);
     unchecked(I[i] = commonRandomJS()*2 - 1);
   }

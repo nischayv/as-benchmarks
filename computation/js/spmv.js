@@ -234,12 +234,12 @@ function spmv_csr(matrix, dim, rowv, colv, v, y, out) {
   let row_start, row_end;
   let sum = 0;
 
-  for(let i = 0; i < dim; ++i){
+  for(let i = 0; i < dim; ++i) {
     sum = y[i];
     row_start = rowv[i];
     row_end = rowv[i+1];
 
-    for(let j = row_start; j < row_end; ++j){
+    for(let j = row_start; j < row_end; ++j) {
       sum += matrix[j] * v[colv[j]];
     }
 
@@ -255,7 +255,7 @@ export function spmv(dim = 25000, density = 1000, stddev = 0.005, iterations = 5
   Array.prototype.forEach.call(v, function(n, i, a) { a[i] = randf(); });
 
   const t1 =  performance.now();
-  for(let i = 0; i < iterations; ++i){
+  for(let i = 0; i < iterations; ++i) {
     spmv_csr(m.Ax, dim, m.Arow, m.Acol, v, y, out);
   }
   const t2 = performance.now();
