@@ -1,19 +1,19 @@
 {
   "scripts": {
     "start": "webpack-dev-server --mode development",
-    "asbuild:untouched": "asc ./node_modules/as-bind/lib/assembly/as-bind.ts assembly/index.ts -b build/untouched.wasm -t build/untouched.wat --sourceMap --validate --debug",
-    "asbuild:optimized": "asc ./node_modules/as-bind/lib/assembly/as-bind.ts assembly/index.ts -b build/optimized.wasm -t build/optimized.wat -O3 --sourceMap --validate --optimize --noAssert",
+    "asbuild:untouched": "asc assembly/index.ts -b build/untouched.wasm -t build/untouched.wat --sourceMap --validate --debug",
+    "asbuild:optimized": "asc assembly/index.ts -b build/optimized.wasm -t build/optimized.wat -O3 --sourceMap --validate --optimize --noAssert",
     "asbuild": "npm run asbuild:untouched && npm run asbuild:optimized",
     "asbuild:watch": "onchange -i 'assembly/**/*' -- npm run asbuild",
     "develop": "webpack --mode development --watch",
     "build": "webpack --mode production"
   },
   "dependencies": {
+    "assemblyscript": "^0.9.4-nightly.20200411",
     "chart.js": "^2.9.3",
     "stats-lite": "^2.2.0"
   },
   "devDependencies": {
-    "assemblyscript": "^0.9.4-nightly.20200402",
     "copy-webpack-plugin": "^5.1.1",
     "onchange": "^6.1.0",
     "webpack": "^4.41.5",
