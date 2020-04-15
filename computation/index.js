@@ -38,35 +38,39 @@ const runFunction = (fnName, wasmInstance) => {
   return { js: result1, as: result2 }
 }
 
-const generateCharts = (wasmInstance) => {
-  const bfsResults = runFunction('bfs', wasmInstance)
-  const fftResults = runFunction('fft', wasmInstance)
-  const ludResults = runFunction('lud', wasmInstance)
-  const pagerankResults = runFunction('pagerank', wasmInstance)
-  const spmvResults = runFunction('spmv', wasmInstance)
-  const labels1 = ['bfs', 'fft', 'lud', 'pagerank', 'spmv']
-  const data = [
-    bfsResults.as,
-    fftResults.as,
-    ludResults.as,
-    pagerankResults.as,
-    spmvResults.as,
-    bfsResults.js,
-    fftResults.js,
-    ludResults.js,
-    pagerankResults.js,
-    spmvResults.js
-  ]
+const generateCharts = async  (wasmInstance) => {
+  toggleSpinner()
+  setTimeout(() => {
+    const bfsResults = runFunction('bfs', wasmInstance)
+    const fftResults = runFunction('fft', wasmInstance)
+    const ludResults = runFunction('lud', wasmInstance)
+    const pagerankResults = runFunction('pagerank', wasmInstance)
+    const spmvResults = runFunction('spmv', wasmInstance)
+    const labels1 = ['bfs', 'fft', 'lud', 'pagerank', 'spmv']
+    const data = [
+      bfsResults.as,
+      fftResults.as,
+      ludResults.as,
+      pagerankResults.as,
+      spmvResults.as,
+      bfsResults.js,
+      fftResults.js,
+      ludResults.js,
+      pagerankResults.js,
+      spmvResults.js
+    ]
 
-  const averageTimeData = data.map(val => getAverageCaseTime(val))
-  generateBarGraph('Average Runtime', labels1, averageTimeData)
+    toggleSpinner()
+    const averageTimeData = data.map(val => getAverageCaseTime(val))
+    generateBarGraph('Average Runtime', labels1, averageTimeData)
 
-  const labels2 = ['Assemblyscript', 'Javascript']
-  generateLineGraph('bfs', labels2, [bfsResults.as, bfsResults.js])
-  generateLineGraph('fft', labels2, [fftResults.as, fftResults.js])
-  generateLineGraph('lud', labels2, [ludResults.as, ludResults.js])
-  generateLineGraph('pagerank', labels2, [pagerankResults.as, pagerankResults.js])
-  generateLineGraph('spmv', labels2, [spmvResults.as, spmvResults.js])
+    const labels2 = ['Assemblyscript', 'Javascript']
+    generateLineGraph('bfs', labels2, [bfsResults.as, bfsResults.js])
+    generateLineGraph('fft', labels2, [fftResults.as, fftResults.js])
+    generateLineGraph('lud', labels2, [ludResults.as, ludResults.js])
+    generateLineGraph('pagerank', labels2, [pagerankResults.as, pagerankResults.js])
+    generateLineGraph('spmv', labels2, [spmvResults.as, spmvResults.js])
+  }, 0)
 }
 
 export const runBenchmark = () => {
@@ -92,9 +96,9 @@ export const runBenchmark = () => {
   //
   // generateRuntimeBarGraph(asBfsResults, jsBfsResults, 'line', 1000)
 
-  toggleSpinner()
+ // toggleSpinner()
   generateCharts(wasmInstance)
-  toggleSpinner()
+//  toggleSpinner()
 }
 
 fetchWasm()

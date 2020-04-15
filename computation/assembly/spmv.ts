@@ -125,7 +125,7 @@ function randNorm(): f64 {
   return gaussian.nextGaussian();
 }
 
-// @ts-ignore
+// @ts-ignore: decorator
 @inline
 function genRand(lb: i32, hb: i32): i32 {
   if(lb < 0 || hb < 0 || hb < lb) return 0;
@@ -135,14 +135,14 @@ function genRand(lb: i32, hb: i32): i32 {
   return <i32> result;
 }
 
-// @ts-ignore
+// @ts-ignore: decorator
 @inline
 function rand(): i64 {
   const n = commonRandomJS() * (Math.pow(2, 32) - 1);
   return <i64> (Math.floor(n) ? Math.floor(n) : Math.ceil(n));
 }
 
-// @ts-ignore
+// @ts-ignore: decorator
 @inline
 function randf(): f64 {
   return 1.0 - 2.0 * (<f64> rand() / (2147483647 + 1.0));
