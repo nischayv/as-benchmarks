@@ -37,7 +37,7 @@ const colors = [
 export const toggleSpinner = () => {
   const spinner = document.getElementById('spinner')
   if (spinner.style.display === 'none') {
-    spinner.style.display = 'block'
+    spinner.style.display = 'inline-block'
   } else {
     spinner.style.display = 'none'
   }

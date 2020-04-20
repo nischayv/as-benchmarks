@@ -96,9 +96,7 @@ export const runBenchmark = () => {
   //
   // generateRuntimeBarGraph(asBfsResults, jsBfsResults, 'line', 1000)
 
- // toggleSpinner()
   generateCharts(wasmInstance)
-//  toggleSpinner()
 }
 
 fetchWasm()
