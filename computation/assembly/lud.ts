@@ -8,11 +8,11 @@ function randomMatrix(matrix: StaticArray<f64>): void {
   for (let i = 0; i < size; ++i) {
     for (let j = 0; j < size; ++j) {
       if (i > j) {
-        unchecked((l[<i32>(i * size + j)] = commonRandomJS()))
+        unchecked((l[(i * size + j) as i32] = commonRandomJS()))
       } else if (i == j) {
-        unchecked((l[<i32>(i * size + j)] = 1))
+        unchecked((l[(i * size + j) as i32] = 1))
       } else {
-        unchecked((l[<i32>(i * size + j)] = 0))
+        unchecked((l[(i * size + j) as i32] = 0))
       }
     }
   }
@@ -20,9 +20,9 @@ function randomMatrix(matrix: StaticArray<f64>): void {
   for (let j = 0; j < size; ++j) {
     for (let i = 0; i < size; ++i) {
       if (i > j) {
-        unchecked((u[<i32>(j * size + i)] = 0))
+        unchecked((u[(j * size + i) as i32] = 0))
       } else {
-        unchecked((u[<i32>(j * size + i)] = commonRandomJS()))
+        unchecked((u[(j * size + i) as i32] = commonRandomJS()))
       }
     }
   }
@@ -31,9 +31,9 @@ function randomMatrix(matrix: StaticArray<f64>): void {
     for (let j = 0; j < size; ++j) {
       let sum: f64 = 0
       for (let k = 0; k < size; k++) {
-        sum += unchecked(l[<i32>(i * size + k)]) * unchecked(u[<i32>(j * size + k)])
+        sum += unchecked(l[i * size + k] as i32) * unchecked(u[(j * size + k) as i32])
       }
-      unchecked((matrix[<i32>(i * size + j)] = sum))
+      unchecked((matrix[(i * size + j) as i32] = sum))
     }
   }
 }

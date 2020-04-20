@@ -5,10 +5,10 @@ const MAX_INIT_EDGES = 4
 const MIN_WEIGHT = 1
 const MAX_WEIGHT = 1
 
-function node(starting, no_of_edges) {
+function node(starting, numOfEdges) {
   return {
     starting: starting,
-    no_of_edges: no_of_edges
+    numOfEdges: numOfEdges
   }
 }
 
@@ -19,113 +19,111 @@ function edge(dest, weight) {
   }
 }
 
-function initializeGraph(no_of_nodes) {
-  const h_graph_nodes = new Array(no_of_nodes)
-  const h_graph_mask = new Uint8Array(no_of_nodes)
-  const h_updating_graph_mask = new Uint8Array(no_of_nodes)
-  const h_graph_visited = new Uint8Array(no_of_nodes)
-  const h_cost = new Uint32Array(no_of_nodes)
+function initializeGraph(numOfNodes) {
+  const hGraphNodes = new Array(numOfNodes)
+  const hGraphMask = new Uint8Array(numOfNodes)
+  const hUpdatingGraphMask = new Uint8Array(numOfNodes)
+  const hGraphVisited = new Uint8Array(numOfNodes)
+  const hCost = new Uint32Array(numOfNodes)
 
   const source = 0
-  const graph = new Array(no_of_nodes)
-  for (let i = 0; i < no_of_nodes; ++i) {
+  const graph = new Array(numOfNodes)
+  for (let i = 0; i < numOfNodes; ++i) {
     graph[i] = []
   }
 
-  for (let i = 0; i < no_of_nodes; ++i) {
-    const no_of_edges = Math.abs(commonRandom() % (MAX_INIT_EDGES - MIN_EDGES + 1)) + MIN_EDGES
-    for (let j = 0; j < no_of_edges; ++j) {
-      const node_id = Math.abs(commonRandom() % no_of_nodes)
+  for (let i = 0; i < numOfNodes; ++i) {
+    const numOfEdges = Math.abs(commonRandom() % (MAX_INIT_EDGES - MIN_EDGES + 1)) + MIN_EDGES
+    for (let j = 0; j < numOfEdges; ++j) {
+      const nodeId = Math.abs(commonRandom() % numOfNodes)
       const weight = Math.abs(commonRandom() % (MAX_WEIGHT - MIN_WEIGHT + 1)) + MIN_WEIGHT
 
-      graph[i].push(edge(node_id, weight))
-      graph[node_id].push(edge(i, weight))
+      graph[i].push(edge(nodeId, weight))
+      graph[nodeId].push(edge(i, weight))
     }
   }
 
-  let total_edges = 0
-  for (let i = 0; i < no_of_nodes; ++i) {
-    const no_of_edges = graph[i].length
-    h_graph_nodes[i] = node(total_edges, no_of_edges)
-    h_graph_mask[i] = false
-    h_updating_graph_mask[i] = false
-    h_graph_visited[i] = false
-
-    total_edges += no_of_edges
+  let totalEdges = 0
+  for (let i = 0; i < numOfNodes; ++i) {
+    const numOfEdges = graph[i].length
+    hGraphNodes[i] = node(totalEdges, numOfEdges)
+    hGraphMask[i] = false
+    hUpdatingGraphMask[i] = false
+    hGraphVisited[i] = false
+    totalEdges += numOfEdges
   }
 
-  h_graph_mask[source] = true
-  h_graph_visited[source] = true
+  hGraphMask[source] = true
+  hGraphVisited[source] = true
 
-  const h_graph_edges = new Array(total_edges)
+  const hGraphEdges = new Array(totalEdges)
 
   let k = 0
-  for (let i = 0; i < no_of_nodes; ++i) {
+  for (let i = 0; i < numOfNodes; ++i) {
     for (let j = 0; j < graph[i].length; ++j) {
-      h_graph_edges[k] = graph[i][j].dest
+      hGraphEdges[k] = graph[i][j].dest
       ++k
     }
   }
 
-  for (let i = 0; i < no_of_nodes; ++i) {
-    h_cost[i] = -1
+  for (let i = 0; i < numOfNodes; ++i) {
+    hCost[i] = -1
   }
-  h_cost[source] = 0
+  hCost[source] = 0
 
   return {
-    h_graph_nodes: h_graph_nodes,
-    h_graph_mask: h_graph_mask,
-    h_updating_graph_mask: h_updating_graph_mask,
-    h_graph_visited: h_graph_visited,
-    h_cost: h_cost,
-    h_graph_edges: h_graph_edges
+    hGraphNodes: hGraphNodes,
+    hGraphMask: hGraphMask,
+    hUpdatingGraphMask: hUpdatingGraphMask,
+    hGraphVisited: hGraphVisited,
+    hCost: hCost,
+    hGraphEdges: hGraphEdges
   }
 }
 
-export function bfs(no_of_nodes = 500000) {
-  let t1, t2
-  const inits = initializeGraph(no_of_nodes)
-  const h_graph_nodes = inits.h_graph_nodes
-  const h_graph_mask = inits.h_graph_mask
-  const h_updating_graph_mask = inits.h_updating_graph_mask
-  const h_graph_visited = inits.h_graph_visited
-  const h_cost = inits.h_cost
-  const h_graph_edges = inits.h_graph_edges
+export function bfs(numOfNodes = 500000) {
+  const inits = initializeGraph(numOfNodes)
+  const hGraphNodes = inits.hGraphNodes
+  const hGraphMask = inits.hGraphMask
+  const hUpdatingGraphMask = inits.hUpdatingGraphMask
+  const hGraphVisited = inits.hGraphVisited
+  const hCost = inits.hCost
+  const hGraphEdges = inits.hGraphEdges
 
   let k = 0
   let stop
 
-  t1 = performance.now()
+  const t1 = performance.now()
   do {
     stop = false
 
-    for (let tid = 0; tid < no_of_nodes; ++tid) {
-      if (h_graph_mask[tid]) {
-        h_graph_mask[tid] = false
+    for (let tid = 0; tid < numOfNodes; ++tid) {
+      if (hGraphMask[tid]) {
+        hGraphMask[tid] = false
         for (
-          let i = h_graph_nodes[tid].starting;
-          i < h_graph_nodes[tid].no_of_edges + h_graph_nodes[tid].starting;
+          let i = hGraphNodes[tid].starting;
+          i < hGraphNodes[tid].numOfEdges + hGraphNodes[tid].starting;
           ++i
         ) {
-          const id = h_graph_edges[i]
-          if (!h_graph_visited[id]) {
-            h_cost[id] = h_cost[tid] + 1
-            h_updating_graph_mask[id] = true
+          const id = hGraphEdges[i]
+          if (!hGraphVisited[id]) {
+            hCost[id] = hCost[tid] + 1
+            hUpdatingGraphMask[id] = true
           }
         }
       }
     }
 
-    for (let tid = 0; tid < no_of_nodes; ++tid) {
-      if (h_updating_graph_mask[tid]) {
-        h_graph_mask[tid] = true
-        h_graph_visited[tid] = true
+    for (let tid = 0; tid < numOfNodes; ++tid) {
+      if (hUpdatingGraphMask[tid]) {
+        hGraphMask[tid] = true
+        hGraphVisited[tid] = true
         stop = true
-        h_updating_graph_mask[tid] = false
+        hUpdatingGraphMask[tid] = false
       }
     }
     ++k
   } while (stop)
-  t2 = performance.now()
+  const t2 = performance.now()
   return t2 - t1
 }

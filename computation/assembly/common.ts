@@ -2,17 +2,18 @@ export declare function consoleLog(msg: string): void
 export declare function performanceNow(): f64
 
 export namespace console {
+  // eslint-disable-next-line no-inner-declarations
   export function log(msg: string): void {
     consoleLog(msg)
   }
 }
 export namespace performance {
+  // eslint-disable-next-line no-inner-declarations
   export function now(): f64 {
     return performanceNow()
   }
 }
 
-// Need to declare this here because assemblyscript doesn't support closures yet
 let seed = 49734321
 
 export function commonRandom(): i32 {

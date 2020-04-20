@@ -70,22 +70,22 @@ function transpose(m: StaticArray<PolarArray>): void {
 
   for (let i = 0; i < N; ++i) {
     const mi = unchecked(m[i])
-    const mi_r = mi.r
-    const mi_i = mi.i
+    const miR = mi.r
+    const miI = mi.i
 
     for (let j = 0; j < i; ++j) {
       const mj = unchecked(m[j])
-      const mj_r = mj.r
-      const mj_i = mj.i
+      const mjR = mj.r
+      const mjI = mj.i
 
-      tempr = unchecked(mi_r[j])
-      tempi = unchecked(mi_i[j])
+      tempr = unchecked(miR[j])
+      tempi = unchecked(miI[j])
 
-      unchecked((mi_r[j] = mj_r[i]))
-      unchecked((mi_i[j] = mj_i[i]))
+      unchecked((miR[j] = mjR[i]))
+      unchecked((miI[j] = mjI[i]))
 
-      unchecked((mj_r[i] = tempr))
-      unchecked((mj_i[i] = tempi))
+      unchecked((mjR[i] = tempr))
+      unchecked((mjI[i] = tempi))
     }
   }
 }
@@ -95,16 +95,16 @@ function fft2D(m: StaticArray<PolarArray>): StaticArray<PolarArray> {
   const M: StaticArray<PolarArray> = new StaticArray<PolarArray>(len)
 
   for (let i = 0; i < len; ++i) {
-    const r_array = unchecked(m[i].r)
-    const i_array = unchecked(m[i].i)
-    unchecked((M[i] = fftSimple(r_array, i_array)))
+    const rArray = unchecked(m[i].r)
+    const iArray = unchecked(m[i].i)
+    unchecked((M[i] = fftSimple(rArray, iArray)))
   }
   transpose(M)
 
   for (let i = 0; i < len; ++i) {
-    const r_array = unchecked(M[i].r)
-    const i_array = unchecked(M[i].i)
-    unchecked((M[i] = fftSimple(r_array, i_array)))
+    const rArray = unchecked(M[i].r)
+    const iArray = unchecked(M[i].i)
+    unchecked((M[i] = fftSimple(rArray, iArray)))
   }
   transpose(M)
 

@@ -42,14 +42,18 @@ function Ziggurat() {
   const fn = NewArray(128)
   const kn = NewArray(128)
 
-  function RNOR() {
-    const hz = SHR3()
-    const iz = hz & 127
-    return Math.abs(hz) < kn[iz] ? hz * wn[iz] : nfix(hz, iz)
+  function SHR3() {
+    const jz = jsr
+    let jzr = jsr
+    jzr ^= jzr << 13
+    jzr ^= jzr >>> 17
+    jzr ^= jzr << 5
+    jsr = jzr
+    return (jz + jzr) | 0
   }
 
-  this.nextGaussian = function () {
-    return RNOR()
+  function UNI() {
+    return 0.5 * (1 + SHR3() / -Math.pow(2, 31))
   }
 
   function nfix(hz, iz) {
@@ -57,6 +61,7 @@ function Ziggurat() {
     const r1 = 1.0 / r
     let x
     let y
+    // eslint-disable-next-line no-constant-condition
     while (true) {
       x = hz * wn[iz]
       if (iz === 0) {
@@ -81,18 +86,14 @@ function Ziggurat() {
     }
   }
 
-  function SHR3() {
-    const jz = jsr
-    let jzr = jsr
-    jzr ^= jzr << 13
-    jzr ^= jzr >>> 17
-    jzr ^= jzr << 5
-    jsr = jzr
-    return (jz + jzr) | 0
+  function RNOR() {
+    const hz = SHR3()
+    const iz = hz & 127
+    return Math.abs(hz) < kn[iz] ? hz * wn[iz] : nfix(hz, iz)
   }
 
-  function UNI() {
-    return 0.5 * (1 + SHR3() / -Math.pow(2, 31))
+  this.nextGaussian = function () {
+    return RNOR()
   }
 
   function zigset() {
@@ -125,10 +126,16 @@ function Ziggurat() {
 
   zigset()
 }
+
 const gaussian = new Ziggurat()
 
 function randNorm() {
   return gaussian.nextGaussian()
+}
+
+function rand() {
+  const n = commonRandomJS() * (Math.pow(2, 32) - 1)
+  return Math.floor(n) ? Math.floor(n) : Math.ceil(n)
 }
 
 function genRand(lb, hb) {
@@ -136,11 +143,6 @@ function genRand(lb, hb) {
 
   const range = hb - lb + 1
   return (rand() % range) + lb
-}
-
-function rand() {
-  const n = commonRandomJS() * (Math.pow(2, 32) - 1)
-  return Math.floor(n) ? Math.floor(n) : Math.ceil(n)
 }
 
 function randf() {
@@ -156,91 +158,89 @@ function sortSubArray(a, start, finish) {
 }
 
 function generateRandomCSR(dim, density, stddev) {
-  let nnz_ith_row, rand_col
-  let nnz_ith_row_double, nz_per_row_doubled, high_bound
-  let used_cols
+  let nnzIthRow, randCol, nnzIthRowDouble
   const m = {}
 
   // lets figure out how many non zero entries we have
-  m.num_rows = dim
-  m.num_cols = dim
-  m.density_perc = density / 10000.0
-  m.nz_per_row = (dim * density) / 1000000
-  m.num_nonzeros = Math.round(m.nz_per_row * dim)
-  m.stdev = stddev * m.nz_per_row
+  m.numRows = dim
+  m.numCols = dim
+  m.densityPerc = density / 10000.0
+  m.nzPerRow = (dim * density) / 1000000
+  m.numNonZeros = Math.round(m.nzPerRow * dim)
+  m.stdev = stddev * m.nzPerRow
 
-  m.Arow = new Uint32Array(m.num_rows + 1)
-  m.Acol = new Uint32Array(m.num_nonzeros) // TA
+  m.aRow = new Uint32Array(m.numRows + 1)
+  m.aCol = new Uint32Array(m.numNonZeros) // TA
 
-  m.Arow[0] = 0
-  nz_per_row_doubled = 2 * m.nz_per_row
-  high_bound = Math.min(m.num_cols, nz_per_row_doubled)
-  used_cols = new Int8Array(m.num_cols)
+  m.aRow[0] = 0
+  const nzPerRowDoubled = 2 * m.nzPerRow
+  const highBound = Math.min(m.numCols, nzPerRowDoubled)
+  const usedCols = new Int8Array(m.numCols)
 
-  for (let i = 0; i < m.num_rows; ++i) {
-    nnz_ith_row_double = randNorm()
-    nnz_ith_row_double *= m.stdev
-    nnz_ith_row_double += m.nz_per_row
+  for (let i = 0; i < m.numRows; ++i) {
+    nnzIthRowDouble = randNorm()
+    nnzIthRowDouble *= m.stdev
+    nnzIthRowDouble += m.nzPerRow
 
-    if (nnz_ith_row_double < 0) {
-      nnz_ith_row = 0
-    } else if (nnz_ith_row_double > high_bound) {
-      nnz_ith_row = high_bound
+    if (nnzIthRowDouble < 0) {
+      nnzIthRow = 0
+    } else if (nnzIthRowDouble > highBound) {
+      nnzIthRow = highBound
     } else {
-      nnz_ith_row = Math.abs(Math.round(nnz_ith_row_double))
+      nnzIthRow = Math.abs(Math.round(nnzIthRowDouble))
     }
 
-    m.Arow[i + 1] = m.Arow[i] + nnz_ith_row
+    m.aRow[i + 1] = m.aRow[i] + nnzIthRow
 
     // no realloc in javascript typed arrays
-    if (m.Arow[i + 1] > m.num_nonzeros) {
-      const temp = m.Acol
-      m.Acol = new Int32Array(m.Arow[i + 1]) // TA
-      m.Acol.set(temp, 0)
+    if (m.aRow[i + 1] > m.numNonZeros) {
+      const temp = m.aCol
+      m.aCol = new Int32Array(m.aRow[i + 1]) // TA
+      m.aCol.set(temp, 0)
     }
 
-    for (let j = 0; j < m.num_cols; ++j) {
-      used_cols[j] = 0
+    for (let j = 0; j < m.numCols; ++j) {
+      usedCols[j] = 0
     }
 
-    for (let j = 0; j < nnz_ith_row; ++j) {
-      rand_col = genRand(0, m.num_cols - 1)
-      if (used_cols[rand_col]) {
+    for (let j = 0; j < nnzIthRow; ++j) {
+      randCol = genRand(0, m.numCols - 1)
+      if (usedCols[randCol]) {
         --j
       } else {
-        m.Acol[m.Arow[i] + j] = rand_col
-        used_cols[rand_col] = 1
+        m.aCol[m.aRow[i] + j] = randCol
+        usedCols[randCol] = 1
       }
     }
 
     // sort the column entries
-    sortSubArray(m.Acol, m.Arow[i], m.Arow[i + 1])
+    sortSubArray(m.aCol, m.aRow[i], m.aRow[i + 1])
   }
 
-  m.num_nonzeros = m.Arow[m.num_rows]
-  m.density_perc = (m.num_nonzeros * 100.0) / (m.num_cols * m.num_rows)
-  m.density_ppm = Math.round(m.density_perc * 10000.0)
+  m.numNonZeros = m.aRow[m.numRows]
+  m.densityPerc = (m.numNonZeros * 100.0) / (m.numCols * m.numRows)
+  m.densityPpm = Math.round(m.densityPerc * 10000.0)
 
-  m.Ax = new Float32Array(m.num_nonzeros)
-  for (let i = 0; i < m.num_nonzeros; ++i) {
-    m.Ax[i] = randf()
-    while (m.Ax[i] === 0.0) {
-      m.Ax[i] = randf()
+  m.ax = new Float32Array(m.numNonZeros)
+  for (let i = 0; i < m.numNonZeros; ++i) {
+    m.ax[i] = randf()
+    while (m.ax[i] === 0.0) {
+      m.ax[i] = randf()
     }
   }
   return m
 }
 
-function spmv_csr(matrix, dim, rowv, colv, v, y, out) {
-  let row_start, row_end
+function spmvCsr(matrix, dim, rowv, colv, v, y, out) {
+  let rowStart, rowEnd
   let sum = 0
 
   for (let i = 0; i < dim; ++i) {
     sum = y[i]
-    row_start = rowv[i]
-    row_end = rowv[i + 1]
+    rowStart = rowv[i]
+    rowEnd = rowv[i + 1]
 
-    for (let j = row_start; j < row_end; ++j) {
+    for (let j = rowStart; j < rowEnd; ++j) {
       sum += matrix[j] * v[colv[j]]
     }
 
@@ -259,7 +259,7 @@ export function spmv(dim = 25000, density = 1000, stddev = 0.005, iterations = 5
 
   const t1 = performance.now()
   for (let i = 0; i < iterations; ++i) {
-    spmv_csr(m.Ax, dim, m.Arow, m.Acol, v, y, out)
+    spmvCsr(m.ax, dim, m.aRow, m.aCol, v, y, out)
   }
   const t2 = performance.now()
 

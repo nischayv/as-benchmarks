@@ -14,4 +14,8 @@ module.exports = {
     'browser': true,
     'es2020': true
   },
+  rules: {
+    '@typescript-eslint/no-namespace': 'off',
+    '@typescript-eslint/ban-ts-ignore': 'off'
+  }
 };

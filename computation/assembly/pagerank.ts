@@ -1,11 +1,11 @@
 import { performance, commonRandom } from './common'
 
-const d_factor: f32 = 0.85
+const dFactor: f32 = 0.85
 
 // generates an array of random pages and their links
-function random_pages(
+function randomPages(
   n: i32,
-  noutlinks: StaticArray<i32>,
+  nOutlinks: StaticArray<i32>,
   divisor: i32
 ): StaticArray<StaticArray<i32>> {
   let k: i32
@@ -16,58 +16,58 @@ function random_pages(
   }
 
   for (let i = 0; i < n; i++) {
-    unchecked((noutlinks[i] = 0))
+    unchecked((nOutlinks[i] = 0))
     const page = unchecked(pages[i])
     for (let j = 0; j < n; ++j) {
       if (i != j && Math.abs(commonRandom()) % divisor === 0) {
         unchecked((page[j] = 1))
-        unchecked((noutlinks[i] += 1))
+        unchecked((nOutlinks[i] += 1))
       }
     }
 
     // the case with no outlinks is afunctioned
-    if (noutlinks[i] === 0) {
+    if (nOutlinks[i] === 0) {
       do {
-        k = <i32>Math.abs(commonRandom()) % n
+        k = (Math.abs(commonRandom()) % n) as i32
       } while (k === i)
 
       unchecked((page[k] = 1))
-      unchecked((noutlinks[i] = 1))
+      unchecked((nOutlinks[i] = 1))
     }
   }
 
   return pages
 }
 
-function map_page_rank(
+function mapPageRank(
   pages: StaticArray<StaticArray<i32>>,
-  page_ranks: StaticArray<f64>,
+  pageRanks: StaticArray<f64>,
   maps: StaticArray<StaticArray<f64>>,
-  noutlinks: StaticArray<i32>,
+  nOutlinks: StaticArray<i32>,
   n: i32
 ): void {
   for (let i = 0; i < n; ++i) {
-    const outbound_rank = unchecked(page_ranks[i]) / unchecked(noutlinks[i])
+    const outboundRank = unchecked(pageRanks[i]) / unchecked(nOutlinks[i])
     const map = unchecked(maps[i])
     const page = unchecked(pages[i])
     for (let j = 0; j < n; ++j) {
       if (unchecked(page[j]) === 0) {
         unchecked((map[j] = 0))
       } else {
-        unchecked((map[j] = unchecked(page[j]) * outbound_rank))
+        unchecked((map[j] = unchecked(page[j]) * outboundRank))
       }
     }
   }
 }
 
-function reduce_page_rank(
-  page_ranks: StaticArray<f64>,
+function reducePageRank(
+  pageRanks: StaticArray<f64>,
   maps: StaticArray<StaticArray<f64>>,
   n: i32
 ): f64 {
   let i: i32, j: i32
   let dif: f64 = 0.0
-  let new_rank: f64, old_rank: f64
+  let newRank: f64, oldRank: f64
 
   const ranks = new StaticArray<f64>(n)
   for (i = 0; i < n; i++) {
@@ -78,11 +78,11 @@ function reduce_page_rank(
   }
 
   for (i = 0; i < n; i++) {
-    old_rank = unchecked(page_ranks[i])
-    new_rank = unchecked(ranks[i])
-    new_rank = (1 - d_factor) / n + d_factor * new_rank
-    dif = Math.abs(new_rank - old_rank) > dif ? Math.abs(new_rank - old_rank) : dif
-    unchecked((page_ranks[i] = new_rank))
+    oldRank = unchecked(pageRanks[i])
+    newRank = unchecked(ranks[i])
+    newRank = (1 - dFactor) / n + dFactor * newRank
+    dif = Math.abs(newRank - oldRank) > dif ? Math.abs(newRank - oldRank) : dif
+    unchecked((pageRanks[i] = newRank))
   }
 
   return dif
@@ -93,35 +93,34 @@ export function pagerank(): f64 {
   const iter: i32 = 10
   const thresh: f64 = 0.00000001
   const divisor: i32 = 100000
-  let pages: StaticArray<StaticArray<i32>>
   const maps = new StaticArray<StaticArray<f64>>(n)
-  const page_ranks = new StaticArray<f64>(n)
-  const noutlinks = new StaticArray<i32>(n)
+  const pageRanks = new StaticArray<f64>(n)
+  const nOutlinks = new StaticArray<i32>(n)
   let t: i32
-  let max_diff = Infinity
+  let maxDiff = Infinity
 
   for (let i = 0; i < n; i++) {
     unchecked((maps[i] = new StaticArray<f64>(n)))
   }
 
-  pages = random_pages(n, noutlinks, divisor)
+  const pages = randomPages(n, nOutlinks, divisor)
 
   for (let i = 0; i < n; ++i) {
-    unchecked((page_ranks[i] = 1.0 / n))
+    unchecked((pageRanks[i] = 1.0 / n))
   }
 
-  let nb_links = 0
+  let nbLinks = 0
   for (let i = 0; i < n; ++i) {
     const page = pages[i]
     for (let j = 0; j < n; ++j) {
-      nb_links += unchecked(page[j])
+      nbLinks += unchecked(page[j])
     }
   }
 
   const t1 = performance.now()
-  for (t = 1; t <= iter && max_diff >= thresh; ++t) {
-    map_page_rank(pages, page_ranks, maps, noutlinks, n)
-    max_diff = reduce_page_rank(page_ranks, maps, n)
+  for (t = 1; t <= iter && maxDiff >= thresh; ++t) {
+    mapPageRank(pages, pageRanks, maps, nOutlinks, n)
+    maxDiff = reducePageRank(pageRanks, maps, n)
   }
   const t2 = performance.now()
   return t2 - t1

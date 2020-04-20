@@ -3,16 +3,16 @@ import { performance, commonRandomJS } from './common'
 // classes
 class Csr {
   constructor(
-    public num_rows: i32,
-    public num_cols: i32,
-    public density_perc: f64,
-    public density_ppm: f64,
-    public nz_per_row: f64,
-    public num_nonzeros: i32,
+    public numRows: i32,
+    public numCols: i32,
+    public densityPerc: f64,
+    public densityPpm: f64,
+    public nzPerRow: f64,
+    public numNonZeros: i32,
     public stdev: f64,
-    public Arow: StaticArray<u32>,
-    public Acol: StaticArray<u32>,
-    public Ax: StaticArray<f32>
+    public aRow: StaticArray<u32>,
+    public aCol: StaticArray<u32>,
+    public ax: StaticArray<f32>
   ) {}
 }
 
@@ -52,6 +52,7 @@ class Ziggurat {
     const r1: f64 = 1.0 / r
     let x: f64
     let y: f64
+    // eslint-disable-next-line no-constant-condition
     while (true) {
       unchecked((x = hz * this.wn[iz]))
       if (iz === 0) {
@@ -129,6 +130,13 @@ function randNorm(): f64 {
 
 // @ts-ignore: decorator
 @inline
+function rand(): i64 {
+  const n = commonRandomJS() * (Math.pow(2, 32) - 1)
+  return (Math.floor(n) ? Math.floor(n) : Math.ceil(n)) as i64
+}
+
+// @ts-ignore: decorator
+@inline
 function genRand(lb: i32, hb: i32): i32 {
   if (lb < 0 || hb < 0 || hb < lb) return 0
   const range = hb - lb + 1
@@ -139,15 +147,8 @@ function genRand(lb: i32, hb: i32): i32 {
 
 // @ts-ignore: decorator
 @inline
-function rand(): i64 {
-  const n = commonRandomJS() * (Math.pow(2, 32) - 1)
-  return (Math.floor(n) ? Math.floor(n) : Math.ceil(n)) as i64
-}
-
-// @ts-ignore: decorator
-@inline
 function randf(): f64 {
-  return 1.0 - 2.0 * (<f64>rand() / (2147483647 + 1.0))
+  return 1.0 - 2.0 * (rand() / (2147483647 + 1.0))
 }
 
 function sortArray(a: StaticArray<u32>, start: u32, finish: u32): void {
@@ -158,93 +159,90 @@ function sortArray(a: StaticArray<u32>, start: u32, finish: u32): void {
 }
 
 function generateRandomCSR(dim: i32, density: i32, stddev: f64): Csr {
-  let nnz_ith_row: f64, rand_col: i32
-  let nnz_ith_row_double: f64, nz_per_row_doubled: i32, high_bound: i32
-  let used_cols: Int8Array
-
-  const density_perc = density / 10000.0
-  const nz_per_row = (dim * density) / 1000000
-  const num_nonzeros = <i32>Math.round(nz_per_row * dim)
-  const newStdev = stddev * nz_per_row
+  let nnzIthRow: f64, randCol: i32, nnzIthRowDouble: f64
+  const densityPerc = density / 10000.0
+  const nzPerRow = (dim * density) / 1000000
+  const numNonZeros = Math.round(nzPerRow * dim) as i32
+  const newStdev = stddev * nzPerRow
 
   const m = new Csr(
     dim,
     dim,
-    density_perc,
+    densityPerc,
     0,
-    nz_per_row,
-    num_nonzeros,
+    nzPerRow,
+    numNonZeros,
     newStdev,
     new StaticArray<u32>(dim + 1),
-    new StaticArray<u32>(<i32>Math.round(nz_per_row * dim)),
+    new StaticArray<u32>(Math.round(nzPerRow * dim) as i32),
     new StaticArray<f32>(0)
   )
 
-  unchecked((m.Arow[0] = 0))
-  nz_per_row_doubled = <i32>(2 * m.nz_per_row)
-  high_bound = <i32>Math.min(m.num_cols, nz_per_row_doubled)
-  used_cols = new Int8Array(m.num_cols)
+  unchecked((m.aRow[0] = 0))
+  const nnzIthRowDoubled = (2 * m.nzPerRow) as i32
+  const highBound = Math.min(m.numCols, nnzIthRowDoubled) as i32
+  const usedCols = new Int8Array(m.numCols)
 
-  for (let i = 0; i < m.num_rows; ++i) {
-    nnz_ith_row_double = randNorm()
-    nnz_ith_row_double *= m.stdev
-    nnz_ith_row_double += m.nz_per_row
+  for (let i = 0; i < m.numRows; ++i) {
+    nnzIthRowDouble = randNorm()
+    nnzIthRowDouble *= m.stdev
+    nnzIthRowDouble += m.nzPerRow
 
-    if (nnz_ith_row_double < 0) {
-      nnz_ith_row = 0
-    } else if (nnz_ith_row_double > high_bound) {
-      nnz_ith_row = high_bound
+    if (nnzIthRowDouble < 0) {
+      nnzIthRow = 0
+    } else if (nnzIthRowDouble > highBound) {
+      nnzIthRow = highBound
     } else {
-      nnz_ith_row = Math.abs(Math.round(nnz_ith_row_double))
+      nnzIthRow = Math.abs(Math.round(nnzIthRowDouble))
     }
 
-    unchecked((m.Arow[i + 1] = <u32>(m.Arow[i] + nnz_ith_row)))
+    unchecked((m.aRow[i + 1] = (m.aRow[i] + nnzIthRow) as u32))
 
     // no realloc in static arrays
-    if ((unchecked(m.Arow[i + 1]) as i32) > m.num_nonzeros) {
-      const temp = m.Acol
-      m.Acol = new StaticArray<u32>(unchecked(m.Arow[i + 1])) // TA
+    if ((unchecked(m.aRow[i + 1]) as i32) > m.numNonZeros) {
+      const temp = m.aCol
+      m.aCol = new StaticArray<u32>(unchecked(m.aRow[i + 1])) // TA
 
       const length = temp.length
       for (let j = 0; j < length; j++) {
-        unchecked((m.Acol[j] = temp[j]))
+        unchecked((m.aCol[j] = temp[j]))
       }
     }
 
-    for (let j = 0; j < m.num_cols; j++) {
-      unchecked((used_cols[j] = 0))
+    for (let j = 0; j < m.numCols; j++) {
+      unchecked((usedCols[j] = 0))
     }
 
-    const cast_nnz_ith_row: i32 = <i32>nnz_ith_row
-    for (let j = 0; j < cast_nnz_ith_row; ++j) {
-      rand_col = genRand(0, m.num_cols - 1)
-      if (unchecked(used_cols[rand_col])) {
+    const castNnzIthRow: i32 = nnzIthRow as i32
+    for (let j = 0; j < castNnzIthRow; ++j) {
+      randCol = genRand(0, m.numCols - 1)
+      if (unchecked(usedCols[randCol])) {
         --j
       } else {
-        unchecked((m.Acol[unchecked(m.Arow[i]) + j] = <u32>rand_col))
-        unchecked((used_cols[<i32>rand_col] = 1))
+        unchecked((m.aCol[unchecked(m.aRow[i]) + j] = randCol as u32))
+        unchecked((usedCols[randCol as i32] = 1))
       }
     }
     // sort the column entries
-    sortArray(m.Acol, m.Arow[i], m.Arow[i + 1]) // TA
+    sortArray(m.aCol, m.aRow[i], m.aRow[i + 1]) // TA
   }
 
-  m.num_nonzeros = unchecked(m.Arow[m.num_rows])
-  m.density_perc = (m.num_nonzeros * 100.0) / (m.num_cols * m.num_rows)
-  m.density_ppm = Math.round(m.density_perc * 10000.0)
+  m.numNonZeros = unchecked(m.aRow[m.numRows])
+  m.densityPerc = (m.numNonZeros * 100.0) / (m.numCols * m.numRows)
+  m.densityPpm = Math.round(m.densityPerc * 10000.0)
 
-  m.Ax = new StaticArray<f32>(m.num_nonzeros)
-  for (let i = 0; i < m.num_nonzeros; ++i) {
-    unchecked((m.Ax[i] = <f32>randf()))
-    while (unchecked(m.Ax[i] === 0.0)) {
-      unchecked((m.Ax[i] = <f32>randf()))
+  m.ax = new StaticArray<f32>(m.numNonZeros)
+  for (let i = 0; i < m.numNonZeros; ++i) {
+    unchecked((m.ax[i] = randf() as f32))
+    while (unchecked(m.ax[i] === 0.0)) {
+      unchecked((m.ax[i] = randf() as f32))
     }
   }
 
   return m
 }
 
-function spmv_csr(
+function spmvCsr(
   matrix: StaticArray<f32>,
   dim: i32,
   rowv: StaticArray<u32>,
@@ -253,15 +251,15 @@ function spmv_csr(
   y: StaticArray<f32>,
   out: StaticArray<f32>
 ): void {
-  let row_start: i32, row_end: i32
+  let rowStart: i32, rowEnd: i32
   let sum: f32 = 0
 
   for (let i = 0; i < dim; ++i) {
     unchecked((sum = y[i]))
-    unchecked((row_start = rowv[i]))
-    unchecked((row_end = rowv[i + 1]))
+    unchecked((rowStart = rowv[i]))
+    unchecked((rowEnd = rowv[i + 1]))
 
-    for (let j = row_start; j < row_end; ++j) {
+    for (let j = rowStart; j < rowEnd; ++j) {
       unchecked((sum += matrix[j] * v[colv[j]]))
     }
     unchecked((out[i] = sum))
@@ -278,12 +276,12 @@ export function spmv(): f64 {
   const y = new StaticArray<f32>(dim)
   const out = new StaticArray<f32>(dim)
   for (let i = 0; i < dim; i++) {
-    unchecked((v[i] = <f32>randf()))
+    unchecked((v[i] = randf() as f32))
   }
 
   const t1 = performance.now()
   for (let i = 0; i < iterations; ++i) {
-    spmv_csr(m.Ax, dim, m.Arow, m.Acol, v, y, out)
+    spmvCsr(m.ax, dim, m.aRow, m.aCol, v, y, out)
   }
   const t2 = performance.now()
 

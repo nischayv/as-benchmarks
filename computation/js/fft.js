@@ -129,10 +129,9 @@ export function fft(twoExp = 8) {
   }
   const n = 1 << twoExp
   const data2D = randomComplexMatrix(n)
-  let t1, t2
 
-  t1 = performance.now()
+  const t1 = performance.now()
   fft2D(data2D)
-  t2 = performance.now()
+  const t2 = performance.now()
   return t2 - t1
 }
