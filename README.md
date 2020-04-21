@@ -1,4 +1,4 @@
-# AssemblyScript Performance Experiments
+# as-benchmarks
 
 A set of benchmarks to test the performance of WebAssembly compiled from AssemblyScript
 in comparison to Javascript. The computation benchmarks are based on the [Ostrich Benchmark Suite](https://github.com/Sable/Ostrich).
@@ -7,15 +7,21 @@ in comparison to Javascript. The computation benchmarks are based on the [Ostric
 
 Install dependencies
 
-`npm install`
+```
+npm install
+```
 
 Compile AssemblyScript to WebAssembly
 
-`npm run asbuild`
+```
+npm run asbuild
+```
 
 Run webpack dev server
 
-`npm run start:prod`
+```
+npm run start:prod
+```
 
 ## License
 This project is licensed under the MIT License.
