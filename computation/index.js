@@ -38,7 +38,7 @@ const runFunction = (fnName, wasmInstance) => {
   return { js: result1, as: result2 }
 }
 
-const runBenchmark = () => {
+export const runBenchmark = () => {
   toggleSpinner()
   setTimeout(() => {
     const bfsResults = runFunction('bfs', wasmInstance)
