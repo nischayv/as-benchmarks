@@ -97,9 +97,6 @@ function Ziggurat() {
   }
 
   function zigset() {
-    // seed generator based on current time
-    // jsr ^= new Date().getTime();
-
     const m1 = 2147483648.0
     let dn = 3.442619855899
     let tn = dn
