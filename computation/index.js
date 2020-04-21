@@ -38,7 +38,7 @@ const runFunction = (fnName, wasmInstance) => {
   return { js: result1, as: result2 }
 }
 
-const generateCharts = async  (wasmInstance) => {
+const runBenchmark = () => {
   toggleSpinner()
   setTimeout(() => {
     const bfsResults = runFunction('bfs', wasmInstance)
@@ -64,39 +64,13 @@ const generateCharts = async  (wasmInstance) => {
     const averageTimeData = data.map(val => getAverageCaseTime(val))
     generateBarGraph('Average Runtime', labels1, averageTimeData)
 
-    const labels2 = ['Assemblyscript', 'Javascript']
+    const labels2 = ['AssemblyScript', 'Javascript']
     generateLineGraph('bfs', labels2, [bfsResults.as, bfsResults.js])
     generateLineGraph('fft', labels2, [fftResults.as, fftResults.js])
     generateLineGraph('lud', labels2, [ludResults.as, ludResults.js])
     generateLineGraph('pagerank', labels2, [pagerankResults.as, pagerankResults.js])
     generateLineGraph('spmv', labels2, [spmvResults.as, spmvResults.js])
   }, 0)
-}
-
-export const runBenchmark = () => {
-  // Benchmark to test how bfs behaves as input size increase
-  // Very time intensive so commenting for now
-  // Result is linear increase but slope of as is less than js
-
-  // for (let i = 0; i < 1000;  i++) {
-  //   const temp1 = []
-  //   const temp2 = []
-  //   for (let j = 0; j < 10; j++) {
-  //     const as = wasmInstance.exports.bfs(i * 100)
-  //     const js = bfs(i * 100)
-  //     if (j !== 0) {
-  //       temp1.push(as)
-  //       temp2.push(js)
-  //     }
-  //   }
-  //   asBfsResults.push(mean(temp1))
-  //   jsBfsResults.push(mean(temp2))
-  //   console.log(`${i}th iteration`)
-  // }
-  //
-  // generateRuntimeBarGraph(asBfsResults, jsBfsResults, 'line', 1000)
-
-  generateCharts(wasmInstance)
 }
 
 fetchWasm()
