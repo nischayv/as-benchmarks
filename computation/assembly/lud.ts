@@ -31,7 +31,7 @@ function randomMatrix(matrix: StaticArray<f64>): void {
     for (let j = 0; j < size; ++j) {
       let sum: f64 = 0
       for (let k = 0; k < size; k++) {
-        sum += unchecked(l[i * size + k] as i32) * unchecked(u[(j * size + k) as i32])
+        sum += unchecked(l[(i * size + k) as i32]) * unchecked(u[(j * size + k) as i32])
       }
       unchecked((matrix[(i * size + j) as i32] = sum))
     }
