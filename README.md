@@ -23,5 +23,7 @@ Run webpack dev server
 npm run start:prod
 ```
 
+The benchmark suite takes a while to run based on the current input sizes. Eventually we would like to support passing smaller inputs to the tests on the web page.
+
 ## License
 This project is licensed under the MIT License.
