@@ -11,7 +11,6 @@ class PolarArray {
 
 @inline
 function complexPolar(r: f64, t: f64): Polar {
-  //return new Polar(r * Math.cos(t), r * Math.sin(t))
   NativeMath.sincos(t)
   return new Polar(r * NativeMath.sincos_cos, r * NativeMath.sincos_sin)
 }
