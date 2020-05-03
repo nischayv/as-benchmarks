@@ -51,11 +51,8 @@ function mapPageRank(
     const map = unchecked(maps[i])
     const page = unchecked(pages[i])
     for (let j = 0; j < n; ++j) {
-      if (unchecked(page[j]) === 0) {
-        unchecked((map[j] = 0))
-      } else {
-        unchecked((map[j] = unchecked(page[j]) * outboundRank))
-      }
+      const p = unchecked(page[j])
+      unchecked((map[j] = (p === 0 ? 0 : p * outboundRank)))
     }
   }
 }
