@@ -3,14 +3,14 @@
     "start": "webpack-dev-server --mode development",
     "start:prod": "webpack-dev-server --mode production",
     "asbuild:untouched": "asc assembly/index.ts -b build/untouched.wasm -t build/untouched.wat --sourceMap --validate --debug",
-    "asbuild:optimized": "asc assembly/index.ts -b build/optimized.wasm -t build/optimized.wat -O3 --sourceMap --validate --optimize --noAssert",
+    "asbuild:optimized": "asc assembly/index.ts -b build/optimized.wasm -t build/optimized.wat -O3 --sourceMap --validate --noAssert",
     "asbuild": "npm run asbuild:untouched && npm run asbuild:optimized",
     "asbuild:watch": "onchange -i 'assembly/**/*' -- npm run asbuild",
     "build": "webpack --mode production",
     "lint": "eslint '*/*.{js,ts}' --quiet --fix"
   },
   "dependencies": {
-    "assemblyscript": "0.9.4-nightly.20200414",
+    "assemblyscript": "^0.9.4-nightly.20200430",
     "chart.js": "^2.9.3",
     "stats-lite": "^2.2.0"
   },
