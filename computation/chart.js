@@ -1,6 +1,6 @@
 import Chart from 'chart.js'
 
-const getOptions = title => ({
+const getOptions = (title, beginAtZero) => ({
   responsive: false,
     title: {
     display: true,
@@ -12,13 +12,16 @@ const getOptions = title => ({
         display: false
       }
     }],
-      yAxes: [{
+    yAxes: [{
       scaleLabel: {
         display: true,
         labelString: 'Time (ms)'
       },
       gridLines: {
         display: false
+      },
+      ticks: {
+        beginAtZero
       }
     }]
   },
@@ -44,10 +47,9 @@ export const toggleSpinner = () => {
 }
 
 export const generateBarGraph = (title, labels, data) => {
-  const canvas = document.createElement('canvas')
+  const canvas = document.getElementById('bar-graph')
   canvas.width = 500
   canvas.height = 500
-  document.body.appendChild(canvas)
 
   new Chart(canvas, {
     type: 'bar',
@@ -67,15 +69,16 @@ export const generateBarGraph = (title, labels, data) => {
         fill: true
       }]
     },
-    options: getOptions(title)
+    options: getOptions(title, true)
   });
 }
 
-export const generateLineGraph = (title, labels, data) => {
-  const canvas = document.createElement('canvas')
+export const generateLineGraph = (title, labels, data, iterations) => {
+  const canvas = document.getElementById('line-graph')
   canvas.width = 500
   canvas.height = 500
-  document.body.appendChild(canvas)
+  const xLabels = Array.from(Array(parseInt(iterations)).keys())
+
   const datasets = data.map((val, index) => ({
     label: labels[index],
     data: val,
@@ -87,9 +90,9 @@ export const generateLineGraph = (title, labels, data) => {
   new Chart(canvas, {
     type: 'line',
     data: {
-      labels: Array.from(Array(120).keys()),
+      labels: xLabels,
       datasets
     },
-    options: getOptions(title)
-  });
+    options: getOptions(title, false)
+  })
 }
