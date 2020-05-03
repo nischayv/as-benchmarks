@@ -1,3 +1,5 @@
+![](https://github.com/nischayv/as-benchmarks/workflows/CI/badge.svg)
+
 # as-benchmarks
 
 A set of benchmarks to test the performance of WebAssembly compiled from AssemblyScript
