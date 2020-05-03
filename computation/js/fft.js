@@ -15,12 +15,13 @@ function fftSimple(r, i) {
     return { r: R, i: I }
   }
 
-  const er = new Float64Array(N / 2)
-  const ei = new Float64Array(N / 2)
-  const dr = new Float64Array(N / 2)
-  const di = new Float64Array(N / 2)
+  const len = N / 2
+  const er = new Float64Array(len)
+  const ei = new Float64Array(len)
+  const dr = new Float64Array(len)
+  const di = new Float64Array(len)
 
-  for (let k = 0; k < N / 2; ++k) {
+  for (let k = 0; k < len; ++k) {
     er[k] = r[2 * k]
     ei[k] = i[2 * k]
     dr[k] = r[2 * k + 1]
@@ -34,19 +35,20 @@ function fftSimple(r, i) {
   const DR = D.r
   const DI = D.i
 
-  for (let k = 0; k < r.length / 2; ++k) {
+  for (let k = 0; k < len; ++k) {
     const c = complexPolar(1, (-2.0 * Math.PI * k) / N)
-    const t = DR[k]
-    DR[k] = t * c.r - DI[k] * c.i
-    DI[k] = t * c.i + DI[k] * c.r
+    const r = DR[k]
+    const i = DI[k]
+    DR[k] = r * c.r - i * c.i
+    DI[k] = r * c.i + i * c.r
   }
 
-  for (let k = 0; k < N / 2; ++k) {
+  for (let k = 0; k < len; ++k) {
     R[k] = ER[k] + DR[k]
     I[k] = EI[k] + DI[k]
 
-    R[k + N / 2] = ER[k] - DR[k]
-    I[k + N / 2] = EI[k] - DI[k]
+    R[k + len] = ER[k] - DR[k]
+    I[k + len] = EI[k] - DI[k]
   }
   return { r: R, i: I }
 }
@@ -56,26 +58,29 @@ function transpose(m) {
   const N = m.length
   for (let i = 0; i < N; ++i) {
     for (let j = 0; j < i; ++j) {
-      tempr = m[i]['r'][j]
-      tempi = m[i]['i'][j]
+      tempr = m[i].r[j]
+      tempi = m[i].i[j]
 
-      m[i]['r'][j] = m[j]['r'][i]
-      m[i]['i'][j] = m[j]['i'][i]
+      m[i].r[j] = m[j].r[i]
+      m[i].i[j] = m[j].i[i]
 
-      m[j]['r'][i] = tempr
-      m[j]['i'][i] = tempi
+      m[j].r[i] = tempr
+      m[j].i[i] = tempi
     }
   }
 }
 
 function fft2D(m) {
-  const M = []
-  for (let i = 0; i < m.length; ++i) {
-    M[i] = fftSimple(m[i].r, m[i].i)
+  const len = m.length
+  const M = new Array(len)
+  for (let i = 0; i < len; ++i) {
+    let mi = m[i]
+    M[i] = fftSimple(mi.r, mi.i)
   }
   transpose(M)
-  for (let i = 0; i < m.length; ++i) {
-    M[i] = fftSimple(M[i].r, M[i].i)
+  for (let i = 0; i < len; ++i) {
+    let Mi = M[i]
+    M[i] = fftSimple(Mi.r, Mi.i)
   }
   transpose(M)
   return M
@@ -93,7 +98,7 @@ function randomComplexArray(n) {
 }
 
 function randomComplexMatrix(n) {
-  const M = []
+  const M = new Array(n)
   for (let i = 0; i < n; ++i) M[i] = randomComplexArray(n) // TA
   return M
 }
