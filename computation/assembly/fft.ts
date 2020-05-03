@@ -9,8 +9,10 @@ class PolarArray {
   constructor(public r: StaticArray<f64>, public i: StaticArray<f64>) {}
 }
 
+@inline
 function complexPolar(r: f64, t: f64): Polar {
-  return new Polar(r * Math.cos(t), r * Math.sin(t))
+  NativeMath.sincos(t)
+  return new Polar(r * NativeMath.sincos_cos, r * NativeMath.sincos_sin)
 }
 
 function fftSimple(r: StaticArray<f64>, i: StaticArray<f64>): PolarArray {
@@ -19,16 +21,16 @@ function fftSimple(r: StaticArray<f64>, i: StaticArray<f64>): PolarArray {
   const I = new StaticArray<f64>(N)
 
   if (N === 1) {
-    R[0] = r[0]
-    I[0] = i[0]
+    unchecked(R[0] = r[0])
+    unchecked(I[0] = i[0])
     return new PolarArray(R, I)
   }
 
   let len = N / 2
-  const er = new StaticArray<f64>(N / 2)
-  const ei = new StaticArray<f64>(N / 2)
-  const dr = new StaticArray<f64>(N / 2)
-  const di = new StaticArray<f64>(N / 2)
+  const er = new StaticArray<f64>(len)
+  const ei = new StaticArray<f64>(len)
+  const dr = new StaticArray<f64>(len)
+  const di = new StaticArray<f64>(len)
 
   for (let k = 0; k < len; ++k) {
     unchecked((er[k] = r[2 * k]))
@@ -44,21 +46,24 @@ function fftSimple(r: StaticArray<f64>, i: StaticArray<f64>): PolarArray {
   const DR = D.r
   const DI = D.i
 
-  len = r.length / 2
   for (let k = 0; k < len; ++k) {
     const c = complexPolar(1, (-2.0 * Math.PI * k) / N)
-    const t = unchecked(DR[k])
-    unchecked((DR[k] = t * c.r - DI[k] * c.i))
-    unchecked((DI[k] = t * c.i + DI[k] * c.r))
+    const r = unchecked(DR[k])
+    const i = unchecked(DI[k])
+    unchecked((DR[k] = r * c.r - i * c.i))
+    unchecked((DI[k] = r * c.i + i * c.r))
   }
 
-  len = N / 2
   for (let k = 0; k < len; ++k) {
-    unchecked((R[k] = ER[k] + DR[k]))
-    unchecked((I[k] = EI[k] + DI[k]))
+    let er = unchecked(ER[k])
+    let dr = unchecked(DR[k])
+    let ei = unchecked(EI[k])
+    let di = unchecked(DI[k])
+    unchecked((R[k] = er + dr))
+    unchecked((I[k] = ei + di))
 
-    unchecked((R[k + N / 2] = ER[k] - DR[k]))
-    unchecked((I[k + N / 2] = EI[k] - DI[k]))
+    unchecked((R[k + len] = er - dr))
+    unchecked((I[k + len] = ei - di))
   }
 
   return new PolarArray(R, I)
@@ -92,19 +97,17 @@ function transpose(m: StaticArray<PolarArray>): void {
 
 function fft2D(m: StaticArray<PolarArray>): StaticArray<PolarArray> {
   const len = m.length
-  const M: StaticArray<PolarArray> = new StaticArray<PolarArray>(len)
+  const M = new StaticArray<PolarArray>(len)
 
   for (let i = 0; i < len; ++i) {
-    const rArray = unchecked(m[i].r)
-    const iArray = unchecked(m[i].i)
-    unchecked((M[i] = fftSimple(rArray, iArray)))
+    const mi = unchecked(m[i])
+    unchecked((M[i] = fftSimple(mi.r, mi.i)))
   }
   transpose(M)
 
   for (let i = 0; i < len; ++i) {
-    const rArray = unchecked(M[i].r)
-    const iArray = unchecked(M[i].i)
-    unchecked((M[i] = fftSimple(rArray, iArray)))
+    const Mi = unchecked(M[i])
+    unchecked((M[i] = fftSimple(Mi.r, Mi.i)))
   }
   transpose(M)
 
