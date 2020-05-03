@@ -146,7 +146,7 @@ function genRand(lb: i32, hb: i32): i32 {
 // @ts-ignore: decorator
 @inline
 function randf(): f64 {
-  return 1.0 - 2.0 * (rand() as f64 / (2147483647 + 1.0))
+  return 1.0 - 2.0 * ((rand() as f64) / (2147483647 + 1.0))
 }
 
 function sortArray(a: StaticArray<u32>, start: u32, finish: u32): void {
