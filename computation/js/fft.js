@@ -44,11 +44,16 @@ function fftSimple(r, i) {
   }
 
   for (let k = 0; k < len; ++k) {
-    R[k] = ER[k] + DR[k]
-    I[k] = EI[k] + DI[k]
+    let er = ER[k]
+    let dr = DR[k]
+    let ei = EI[k]
+    let di = DI[k]
 
-    R[k + len] = ER[k] - DR[k]
-    I[k + len] = EI[k] - DI[k]
+    R[k] = er + dr
+    I[k] = ei + di
+
+    R[k + len] = er - dr
+    I[k + len] = ei - di
   }
   return { r: R, i: I }
 }
