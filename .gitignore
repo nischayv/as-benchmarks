@@ -3,4 +3,4 @@ experiments.iml
 node_modules
 computation/*/node_modules
 computation/*/build
-computation/*/dist
+!computation/dist/build

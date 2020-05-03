@@ -5,6 +5,8 @@
 A set of benchmarks to test the performance of WebAssembly compiled from AssemblyScript
 in comparison to Javascript. The computation benchmarks are based on the [Ostrich Benchmark Suite](https://github.com/Sable/Ostrich).
 
+### [Live Demo](https://nischayv.github.io/computation/dist/index.html)
+
 ## Steps to run
 
 Install dependencies
