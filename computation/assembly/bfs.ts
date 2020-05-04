@@ -105,8 +105,9 @@ export function bfs(): f64 {
       if (unchecked(hGraphMask[tid])) {
         unchecked((hGraphMask[tid] = false))
         const cost = unchecked(hCost[tid])
-        const start = unchecked(hGraphNodes[tid].starting)
-        const end = unchecked(hGraphNodes[tid].numOfEdges + hGraphNodes[tid].starting)
+        const node = unchecked(hGraphNodes[tid])
+        const start = unchecked(node.starting)
+        const end = unchecked(node.numOfEdges + start)
         for (let i = start; i < end; ++i) {
           const id = unchecked(hGraphEdges[i])
           if (!unchecked(hGraphVisited[id])) {

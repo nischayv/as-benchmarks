@@ -5111,9 +5111,8 @@
   (local $17 i32)
   (local $18 i32)
   (local $19 i32)
-  (local $20 i32)
+  (local $20 f64)
   (local $21 f64)
-  (local $22 f64)
   i32.const 500000
   call $assembly/bfs/initializeGraph
   local.set $0
@@ -5173,61 +5172,55 @@
       local.get $10
       call $~lib/staticarray/StaticArray<assembly/bfs/Node>#__unchecked_get
       local.tee $13
-      i32.load
+      call $~lib/rt/pure/__retain
       local.set $14
-      local.get $1
-      local.get $10
-      call $~lib/staticarray/StaticArray<assembly/bfs/Node>#__unchecked_get
-      local.tee $15
-      i32.load offset=4
-      local.get $1
-      local.get $10
-      call $~lib/staticarray/StaticArray<assembly/bfs/Node>#__unchecked_get
-      local.tee $16
-      i32.load
-      i32.add
-      local.set $17
       local.get $14
-      local.set $18
+      i32.load
+      local.set $15
+      local.get $14
+      i32.load offset=4
+      local.get $15
+      i32.add
+      local.set $16
+      local.get $15
+      local.set $17
       loop $for-loop|2
-       local.get $18
        local.get $17
+       local.get $16
        i32.lt_s
-       local.set $19
-       local.get $19
+       local.set $18
+       local.get $18
        if
         local.get $6
-        local.get $18
+        local.get $17
         call $~lib/staticarray/StaticArray<i32>#__unchecked_get
-        local.set $20
+        local.set $19
         local.get $4
-        local.get $20
+        local.get $19
         call $~lib/staticarray/StaticArray<bool>#__unchecked_get
         i32.eqz
         if
          local.get $5
-         local.get $20
+         local.get $19
          local.get $12
          i32.const 1
          i32.add
          call $~lib/staticarray/StaticArray<i32>#__unchecked_set
          local.get $3
-         local.get $20
+         local.get $19
          i32.const 1
          call $~lib/staticarray/StaticArray<bool>#__unchecked_set
         end
-        local.get $18
+        local.get $17
         i32.const 1
         i32.add
-        local.set $18
+        local.set $17
         br $for-loop|2
        end
       end
       local.get $13
       call $~lib/rt/pure/__release
-      local.get $15
-      call $~lib/rt/pure/__release
-      local.get $16
+      local.get $14
       call $~lib/rt/pure/__release
      end
      local.get $10
@@ -5282,11 +5275,11 @@
    br_if $do-continue|0
   end
   call $assembly/common/performance.now
-  local.set $21
-  local.get $21
+  local.set $20
+  local.get $20
   local.get $9
   f64.sub
-  local.set $22
+  local.set $21
   local.get $0
   call $~lib/rt/pure/__release
   local.get $1
@@ -5301,7 +5294,7 @@
   call $~lib/rt/pure/__release
   local.get $6
   call $~lib/rt/pure/__release
-  local.get $22
+  local.get $21
  )
  (func $~lib/staticarray/StaticArray<assembly/fft/PolarArray>#constructor (param $0 i32) (param $1 i32) (result i32)
   (local $2 i32)

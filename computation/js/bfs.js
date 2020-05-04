@@ -100,14 +100,14 @@ export function bfs(numOfNodes = 500000) {
     for (let tid = 0; tid < numOfNodes; ++tid) {
       if (hGraphMask[tid]) {
         hGraphMask[tid] = false
-        for (
-          let i = hGraphNodes[tid].starting;
-          i < hGraphNodes[tid].numOfEdges + hGraphNodes[tid].starting;
-          ++i
-        ) {
+        const cost = hCost[tid]
+        const node = hGraphNodes[tid]
+        const start = node.starting
+        const end = node.numOfEdges + start
+        for (let i = start; i < end; ++i) {
           const id = hGraphEdges[i]
           if (!hGraphVisited[id]) {
-            hCost[id] = hCost[tid] + 1
+            hCost[id] = cost + 1
             hUpdatingGraphMask[id] = true
           }
         }
