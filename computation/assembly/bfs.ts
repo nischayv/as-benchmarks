@@ -85,7 +85,7 @@ export function initializeGraph(numOfNodes: i32): Graph {
 }
 
 export function bfs(): f64 {
-  const numOfNodes: i32 = 500000
+  const numOfNodes = 500000
   const inits = initializeGraph(numOfNodes)
   const hGraphNodes = inits.hGraphNodes
   const hGraphMask = inits.hGraphMask
@@ -106,8 +106,8 @@ export function bfs(): f64 {
         unchecked((hGraphMask[tid] = false))
         const cost = unchecked(hCost[tid])
         const node = unchecked(hGraphNodes[tid])
-        const start = unchecked(node.starting)
-        const end = unchecked(node.numOfEdges + start)
+        const start = node.starting
+        const end = node.numOfEdges + start
         for (let i = start; i < end; ++i) {
           const id = unchecked(hGraphEdges[i])
           if (!unchecked(hGraphVisited[id])) {
