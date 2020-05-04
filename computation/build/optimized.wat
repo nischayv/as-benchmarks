@@ -7623,58 +7623,33 @@
   (local $5 i32)
   (local $6 i32)
   (local $7 i32)
-  (local $8 i32)
-  (local $9 f64)
+  (local $8 f64)
+  (local $9 i32)
+  local.get $0
+  local.set $5
   loop $for-loop|0
-   local.get $8
+   local.get $9
    i32.const 1000
    i32.lt_s
    if
     local.get $1
-    local.get $8
+    local.get $9
     i32.const 3
     i32.shl
     i32.add
     f64.load
     local.get $3
-    local.get $8
+    local.get $9
     i32.const 2
     i32.shl
-    local.tee $5
+    local.tee $0
     i32.add
     i32.load
     f64.convert_i32_s
     f64.div
-    local.set $9
-    local.get $2
-    local.get $5
-    i32.add
-    i32.load
-    local.tee $5
-    i32.const 12164
-    i32.gt_u
-    if
-     local.get $5
-     i32.const 16
-     i32.sub
-     local.tee $4
-     i32.load offset=4
-     local.set $6
-     local.get $4
-     local.get $6
-     i32.const 1
-     i32.add
-     i32.store offset=4
-     local.get $4
-     i32.load
-     drop
-    end
-    local.get $5
-    local.set $6
+    local.set $8
     local.get $0
-    local.get $8
-    i32.const 2
-    i32.shl
+    local.get $2
     i32.add
     i32.load
     local.tee $4
@@ -7684,64 +7659,88 @@
      local.get $4
      i32.const 16
      i32.sub
-     local.tee $5
+     local.tee $7
      i32.load offset=4
-     local.set $7
-     local.get $5
+     local.set $0
      local.get $7
+     local.get $0
      i32.const 1
      i32.add
      i32.store offset=4
-     local.get $5
+     local.get $7
      i32.load
      drop
     end
-    local.get $4
-    local.set $5
-    i32.const 0
-    local.set $7
-    loop $for-loop|1
+    local.get $5
+    local.get $9
+    i32.const 2
+    i32.shl
+    i32.add
+    i32.load
+    local.tee $7
+    i32.const 12164
+    i32.gt_u
+    if
      local.get $7
+     i32.const 16
+     i32.sub
+     local.tee $6
+     i32.load offset=4
+     local.set $0
+     local.get $6
+     local.get $0
+     i32.const 1
+     i32.add
+     i32.store offset=4
+     local.get $6
+     i32.load
+     drop
+    end
+    local.get $7
+    local.set $6
+    i32.const 0
+    local.set $0
+    loop $for-loop|1
+     local.get $0
      i32.const 1000
      i32.lt_s
      if
-      local.get $5
-      local.get $7
+      local.get $4
+      local.get $0
+      i32.const 3
+      i32.shl
+      i32.add
+      local.get $6
+      local.get $0
       i32.const 2
       i32.shl
       i32.add
       i32.load
-      if
-       local.get $6
+      local.tee $7
+      if (result f64)
        local.get $7
-       i32.const 3
-       i32.shl
-       i32.add
-       local.get $5
-       local.get $7
-       i32.const 2
-       i32.shl
-       i32.add
-       i32.load
        f64.convert_i32_s
-       local.get $9
+       local.get $8
        f64.mul
-       f64.store
       else
-       local.get $6
-       local.get $7
-       i32.const 3
-       i32.shl
-       i32.add
        f64.const 0
-       f64.store
       end
-      local.get $7
+      f64.store
+      local.get $0
       i32.const 1
       i32.add
-      local.set $7
+      local.set $0
       br $for-loop|1
      end
+    end
+    local.get $4
+    i32.const 12164
+    i32.gt_u
+    if
+     local.get $4
+     i32.const 16
+     i32.sub
+     call $~lib/rt/pure/decrement
     end
     local.get $6
     i32.const 12164
@@ -7752,19 +7751,10 @@
      i32.sub
      call $~lib/rt/pure/decrement
     end
-    local.get $5
-    i32.const 12164
-    i32.gt_u
-    if
-     local.get $5
-     i32.const 16
-     i32.sub
-     call $~lib/rt/pure/decrement
-    end
-    local.get $8
+    local.get $9
     i32.const 1
     i32.add
-    local.set $8
+    local.set $9
     br $for-loop|0
    end
   end

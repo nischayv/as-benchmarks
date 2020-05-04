@@ -31,57 +31,64 @@ function randomPages(n, nOutlinks, divisor) {
   return pages
 }
 
-function initArray(a, n, val) {
-  for (let i = 0; i < n; ++i) {
-    a[i] = val
-  }
-}
-
 function mapPageRank(pages, pageRanks, maps, nOutlinks, n) {
   for (let i = 0; i < n; ++i) {
     const outboundRank = pageRanks[i] / nOutlinks[i]
+    const map = maps[i]
+    const page = pages[i]
     for (let j = 0; j < n; ++j) {
-      maps[i][j] = pages[i][j] === 0 ? 0 : pages[i][j] * outboundRank
+      const p = page[j]
+      map[j] = p === 0 ? 0 : p * outboundRank
     }
   }
 }
 
 function reducePageRank(pageRanks, maps, n) {
+  let i, j
   let dif = 0.0
   let newRank, oldRank
 
-  for (let j = 0; j < n; ++j) {
-    oldRank = pageRanks[j]
-    newRank = 0.0
-    for (let i = 0; i < n; ++i) {
-      newRank += maps[i][j]
+  const ranks = new Float64Array(n)
+  for (i = 0; i < n; i++) {
+    const map = maps[i]
+    for (j = 0; j < n; j++) {
+      ranks[j] += map[j]
     }
+  }
 
+  for (i = 0; i < n; i++) {
+    oldRank = pageRanks[i]
+    newRank = ranks[i]
     newRank = (1 - dFactor) / n + dFactor * newRank
     dif = Math.abs(newRank - oldRank) > dif ? Math.abs(newRank - oldRank) : dif
-    pageRanks[j] = newRank
+    pageRanks[i] = newRank
   }
+
   return dif
 }
 
 export function pagerank(n = 1000, iter = 10, thresh = 0.00000001, divisor = 100000) {
-  const maps = []
+  const maps = new Array(n)
   let t
   let maxDiff = Infinity
 
   const pageRanks = new Float64Array(n)
+  const nOutlinks = new Int32Array(n)
   for (let i = 0; i < n; i++) {
     maps[i] = new Float64Array(n)
   }
-  const nOutlinks = new Int32Array(n)
 
   const pages = randomPages(n, nOutlinks, divisor)
-  initArray(pageRanks, n, 1.0 / n)
+
+  for (let i = 0; i < n; ++i) {
+    pageRanks[i] = 1.0 / n
+  }
 
   let nbLinks = 0
   for (let i = 0; i < n; ++i) {
+    const page = pages[i]
     for (let j = 0; j < n; ++j) {
-      nbLinks += pages[i][j]
+      nbLinks += page[j]
     }
   }
 

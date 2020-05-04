@@ -8264,6 +8264,7 @@
   (local $11 i32)
   (local $12 i32)
   (local $13 i32)
+  (local $14 i32)
   local.get $0
   call $~lib/rt/pure/__retain
   local.set $0
@@ -8318,24 +8319,21 @@
       local.get $11
       local.get $12
       call $~lib/staticarray/StaticArray<i32>#__unchecked_get
+      local.set $14
+      local.get $9
+      local.get $12
+      local.get $14
       i32.const 0
       i32.eq
-      if
-       local.get $9
-       local.get $12
+      if (result f64)
        f64.const 0
-       call $~lib/staticarray/StaticArray<f64>#__unchecked_set
       else
-       local.get $9
-       local.get $12
-       local.get $11
-       local.get $12
-       call $~lib/staticarray/StaticArray<i32>#__unchecked_get
+       local.get $14
        f64.convert_i32_s
        local.get $7
        f64.mul
-       call $~lib/staticarray/StaticArray<f64>#__unchecked_set
       end
+      call $~lib/staticarray/StaticArray<f64>#__unchecked_set
       local.get $12
       i32.const 1
       i32.add
