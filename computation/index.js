@@ -5,21 +5,32 @@ import { mean } from 'stats-lite'
 let wasmInstance;
 
 const fetchWasm = async () => {
-  // Instantiate our wasm module
-  const wasm = fetch('build/optimized.wasm')
-  wasmInstance = await WebAssembly.instantiateStreaming(wasm, {
+  const imports = {
     env: {
       abort(_msg, _file, line, column) {
         console.error(`Abort called at ${_file}:${line}:${column}`)
       }
     },
     common: {
-      consoleLog: message => {
+      consoleLog(message) {
         console.log(message)
       },
-      performanceNow: () => performance.now()
+      performanceNow() {
+        return performance.now()
+      }
     }
-  })
+  }
+  // Instantiate our wasm module
+  try {
+    const response = fetch('build/optimized.wasm')
+    if (typeof WebAssembly.instantiateStreaming === 'function') {
+      wasmInstance = await WebAssembly.instantiateStreaming(response, imports)
+    } else {
+      wasmInstance = await WebAssembly.instantiate(await (await response).arrayBuffer(), imports)
+    }
+  } catch (e) {
+    console.error('Can\'t instantiate WebAssembly module.\n', e);
+  }
 }
 
 const getAverageCaseTime = (arr) => mean(arr)
@@ -62,6 +73,8 @@ export const inputHandler = (e) => {
 }
 
 export const runBenchmark = () => {
+  if (!wasmInstance) return;
+
   const option = document.getElementById('selectedOption').value
   const iterations = document.getElementById('iterations').value
   const canvas = document.getElementById('bar-graph')
