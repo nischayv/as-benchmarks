@@ -1,10 +1,13 @@
 import { Starfield } from './js'
 
-// let wasmInstance
 const canvas = document.getElementById('starfield')
-console.log(canvas)
 const context = canvas.getContext('2d')
+const fpsElement = document.getElementById('fps')
 const starfieldJs = new Starfield()
+// let wasmInstance
+let fps = 0
+let accTime = 0
+let lastTime = 0
 
 // const fetchWasm = async () => {
 //   const imports = {
@@ -35,7 +38,21 @@ const starfieldJs = new Starfield()
 //   }
 // }
 
-function animate() {
+const updateFPS = () => {
+  const now = performance.now()
+  fps += 1
+  if (accTime >= 1000) {
+    fpsElement.innerHTML = Math.floor(1000 * fps / accTime)
+    fps = 0
+    accTime = 0
+  } else {
+    accTime += now - lastTime
+  }
+  lastTime = now
+}
+
+const animate = () => {
+  setTimeout(animate, 0)
   context.clearRect(0, 0, canvas.width, canvas.height) // clear the frame
   starfieldJs.addStar()
   starfieldJs.updateStars()
@@ -50,19 +67,19 @@ function animate() {
     context.arc(
       400 + star[0],
       400 + star[1],
-      Math.abs(star[1] / 100 + n / 200),
+      Math.abs(star[1] / 200 + n / 300),
       0,
       2 * Math.PI
     )
     context.fill()
   }
-  window.requestAnimationFrame(animate) // request another animation frame
-}
 
+  updateFPS()
+}
 
 export const runStarfield = () => {
   // if (!wasmInstance) return
-  window.requestAnimationFrame(animate)
+  animate()
 }
 
 // await fetchWasm()

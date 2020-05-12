@@ -4,7 +4,7 @@ export class Starfield {
   }
 
   addStar() {
-    if (this.stars.length < 500 && Math.random() < 0.5) {
+    if (this.stars.length < 1000) {
       // if fewer than 300 stars, a 50% chance of creating a new one
       // create a new star in the middle with random velocity
       const star = {
@@ -41,5 +41,4 @@ export class Starfield {
     const star = this.stars[i]
     return [star.x, star.y, star.color]
   }
-
 }
