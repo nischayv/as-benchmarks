@@ -44,10 +44,10 @@ function fftSimple(r, i) {
   }
 
   for (let k = 0; k < len; ++k) {
-    let er = ER[k]
-    let dr = DR[k]
-    let ei = EI[k]
-    let di = DI[k]
+    const er = ER[k]
+    const dr = DR[k]
+    const ei = EI[k]
+    const di = DI[k]
 
     R[k] = er + dr
     I[k] = ei + di
@@ -79,12 +79,12 @@ function fft2D(m) {
   const len = m.length
   const M = new Array(len)
   for (let i = 0; i < len; ++i) {
-    let mi = m[i]
+    const mi = m[i]
     M[i] = fftSimple(mi.r, mi.i)
   }
   transpose(M)
   for (let i = 0; i < len; ++i) {
-    let Mi = M[i]
+    const Mi = M[i]
     M[i] = fftSimple(Mi.r, Mi.i)
   }
   transpose(M)

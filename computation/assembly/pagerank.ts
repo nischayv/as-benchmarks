@@ -52,7 +52,7 @@ function mapPageRank(
     const page = unchecked(pages[i])
     for (let j = 0; j < n; ++j) {
       const p = unchecked(page[j])
-      unchecked((map[j] = (p === 0 ? 0 : p * outboundRank)))
+      unchecked((map[j] = p === 0 ? 0 : p * outboundRank))
     }
   }
 }
