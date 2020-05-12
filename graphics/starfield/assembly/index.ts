@@ -2,20 +2,20 @@ class Star {
   constructor(
     public x: f64 = 0.0,
     public y: f64 = 0.0,
-    public vx: f64 = -5 + Math.random() * 10,
-    public vy: f64 = -5 + Math.random() * 10,
+    public vx: f64 = -5 + NativeMath.random() * 10,
+    public vy: f64 = -5 + NativeMath.random() * 10,
     public color: f64 = 0.0
   ) {}
 }
 
 let count: i32 = 0
-const stars = new StaticArray<Star>(1000)
+let stars = new StaticArray<Star>(1000)
 
 export function addStar(): void {
   if (count < 1000) {
-    // if fewer than 300 stars, a 50% chance of creating a new one
     // create a new star in the middle with random velocity
-    unchecked(stars[count] = new Star())// add the star to the array
+    // add the star to the array
+    unchecked(stars[count] = new Star())
     count += 1
   }
 }
@@ -43,8 +43,13 @@ export function getStarsLength(): i32 {
 export function getStarInfo(i: i32): StaticArray<f64> {
   const star = unchecked(stars[i])
   const result = new StaticArray<f64>(3)
-  unchecked(result[0] = star.x)
-  unchecked(result[1] = star.y)
-  unchecked(result[2] = star.color)
+  unchecked((result[0] = star.x))
+  unchecked((result[1] = star.y))
+  unchecked((result[2] = star.color))
   return result
+}
+
+export function clear(): void {
+  stars = new StaticArray<Star>(1000)
+  count = 0
 }
