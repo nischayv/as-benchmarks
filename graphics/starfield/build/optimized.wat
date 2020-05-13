@@ -1,14 +1,15 @@
 (module
  (type $none_=>_none (func))
  (type $i32_=>_none (func (param i32)))
- (type $i32_i32_=>_none (func (param i32 i32)))
  (type $none_=>_i32 (func (result i32)))
- (type $i32_=>_i32 (func (param i32) (result i32)))
+ (type $i32_=>_f64 (func (param i32) (result f64)))
+ (type $i32_i32_=>_none (func (param i32 i32)))
  (type $i32_i32_=>_i32 (func (param i32 i32) (result i32)))
  (type $none_=>_f64 (func (result f64)))
  (type $i32_i32_i32_=>_none (func (param i32 i32 i32)))
  (type $i32_i32_i32_i32_=>_none (func (param i32 i32 i32 i32)))
  (type $i64_=>_none (func (param i64)))
+ (type $i32_=>_i32 (func (param i32) (result i32)))
  (type $i32_i32_i32_=>_i32 (func (param i32 i32 i32) (result i32)))
  (import "env" "abort" (func $~lib/builtins/abort (param i32 i32 i32 i32)))
  (import "env" "seed" (func $~lib/builtins/seed (result f64)))
@@ -17,7 +18,7 @@
  (data (i32.const 1088) "\1e\00\00\00\01\00\00\00\01\00\00\00\1e\00\00\00~\00l\00i\00b\00/\00r\00t\00/\00t\00l\00s\00f\00.\00t\00s")
  (data (i32.const 1136) "\1c\00\00\00\01\00\00\00\01\00\00\00\1c\00\00\00I\00n\00v\00a\00l\00i\00d\00 \00l\00e\00n\00g\00t\00h")
  (data (i32.const 1184) "&\00\00\00\01\00\00\00\01\00\00\00&\00\00\00~\00l\00i\00b\00/\00s\00t\00a\00t\00i\00c\00a\00r\00r\00a\00y\00.\00t\00s")
- (data (i32.const 1248) "\06\00\00\00 \00\00\00\00\00\00\00 \00\00\00\00\00\00\00 \00\00\00\00\00\00\00 \00\00\00\00\00\00\00$A\00\00\00\00\00\00$\1a")
+ (data (i32.const 1248) "\05\00\00\00 \00\00\00\00\00\00\00 \00\00\00\00\00\00\00 \00\00\00\00\00\00\00 \00\00\00\00\00\00\00$A")
  (global $~lib/rt/tlsf/ROOT (mut i32) (i32.const 0))
  (global $assembly/index/count (mut i32) (i32.const 0))
  (global $assembly/index/stars (mut i32) (i32.const 0))
@@ -35,7 +36,9 @@
  (export "addStar" (func $assembly/index/addStar))
  (export "updateStars" (func $assembly/index/updateStars))
  (export "getStarsLength" (func $assembly/index/getStarsLength))
- (export "getStarInfo" (func $assembly/index/getStarInfo))
+ (export "getStarX" (func $assembly/index/getStarX))
+ (export "getStarY" (func $assembly/index/getStarY))
+ (export "getStarColor" (func $assembly/index/getStarColor))
  (export "clear" (func $assembly/index/clear))
  (start $~start)
  (func $~lib/rt/tlsf/removeBlock (param $0 i32) (param $1 i32)
@@ -433,11 +436,11 @@
    if
     unreachable
    end
-   i32.const 1312
+   i32.const 1296
    local.tee $0
    i32.const 0
    i32.store
-   i32.const 2880
+   i32.const 2864
    i32.const 0
    i32.store
    loop $for-loop|0
@@ -448,7 +451,7 @@
      local.get $1
      i32.const 2
      i32.shl
-     i32.const 1312
+     i32.const 1296
      i32.add
      i32.const 0
      i32.store offset=4
@@ -466,7 +469,7 @@
        i32.add
        i32.const 2
        i32.shl
-       i32.const 1312
+       i32.const 1296
        i32.add
        i32.const 0
        i32.store offset=96
@@ -484,13 +487,13 @@
      br $for-loop|0
     end
    end
-   i32.const 1312
-   i32.const 2896
+   i32.const 1296
+   i32.const 2880
    memory.size
    i32.const 16
    i32.shl
    call $~lib/rt/tlsf/addMemory
-   i32.const 1312
+   i32.const 1296
    global.set $~lib/rt/tlsf/ROOT
   end
   local.get $0
@@ -792,7 +795,7 @@
   (local $1 i32)
   (local $2 i32)
   local.get $0
-  i32.const 1300
+  i32.const 1292
   i32.gt_u
   if
    local.get $0
@@ -814,7 +817,7 @@
  )
  (func $~lib/rt/pure/__release (param $0 i32)
   local.get $0
-  i32.const 1300
+  i32.const 1292
   i32.gt_u
   if
    local.get $0
@@ -823,67 +826,51 @@
    call $~lib/rt/pure/decrement
   end
  )
- (func $~lib/memory/memory.fill (param $0 i32) (param $1 i32)
+ (func $~lib/memory/memory.fill (param $0 i32)
+  (local $1 i32)
   (local $2 i32)
   block $~lib/util/memory/memset|inlined.0
-   local.get $1
-   i32.eqz
-   br_if $~lib/util/memory/memset|inlined.0
    local.get $0
    i32.const 0
    i32.store8
    local.get $0
-   local.get $1
+   i32.const 3996
    i32.add
-   i32.const 4
-   i32.sub
-   local.tee $2
+   local.tee $1
    i32.const 0
    i32.store8 offset=3
-   local.get $1
-   i32.const 2
-   i32.le_u
-   br_if $~lib/util/memory/memset|inlined.0
    local.get $0
    i32.const 0
    i32.store8 offset=1
    local.get $0
    i32.const 0
    i32.store8 offset=2
-   local.get $2
+   local.get $1
    i32.const 0
    i32.store8 offset=2
-   local.get $2
+   local.get $1
    i32.const 0
    i32.store8 offset=1
-   local.get $1
-   i32.const 6
-   i32.le_u
-   br_if $~lib/util/memory/memset|inlined.0
    local.get $0
    i32.const 0
    i32.store8 offset=3
-   local.get $2
+   local.get $1
    i32.const 0
    i32.store8
-   local.get $1
-   i32.const 8
-   i32.le_u
-   br_if $~lib/util/memory/memset|inlined.0
    local.get $0
    i32.const 0
    local.get $0
    i32.sub
    i32.const 3
    i32.and
-   local.tee $2
+   local.tee $1
    i32.add
    local.tee $0
    i32.const 0
    i32.store
    local.get $0
+   i32.const 4000
    local.get $1
-   local.get $2
    i32.sub
    i32.const -4
    i32.and
@@ -992,10 +979,9 @@
   i32.const 16
   i32.add
   local.tee $0
-  i32.const 4000
   call $~lib/memory/memory.fill
   local.get $0
-  i32.const 1300
+  i32.const 1292
   i32.gt_u
   if
    local.get $0
@@ -1148,7 +1134,7 @@
    i32.const 16
    i32.add
    local.tee $1
-   i32.const 1300
+   i32.const 1292
    i32.gt_u
    if
     local.get $1
@@ -1194,7 +1180,7 @@
    i32.ne
    if
     local.get $0
-    i32.const 1300
+    i32.const 1292
     i32.gt_u
     if
      local.get $0
@@ -1216,7 +1202,7 @@
     local.get $0
     i32.store
     local.get $6
-    i32.const 1300
+    i32.const 1292
     i32.gt_u
     if
      local.get $6
@@ -1230,7 +1216,7 @@
    i32.add
    global.set $assembly/index/count
    local.get $0
-   i32.const 1300
+   i32.const 1292
    i32.gt_u
    if
     local.get $0
@@ -1257,7 +1243,7 @@
     i32.add
     i32.load
     local.tee $0
-    i32.const 1300
+    i32.const 1292
     i32.gt_u
     if
      local.get $0
@@ -1323,7 +1309,7 @@
     f64.floor
     f64.store offset=32
     local.get $1
-    i32.const 1300
+    i32.const 1292
     i32.gt_u
     if
      local.get $1
@@ -1342,9 +1328,10 @@
  (func $assembly/index/getStarsLength (result i32)
   global.get $assembly/index/count
  )
- (func $assembly/index/getStarInfo (param $0 i32) (result i32)
+ (func $assembly/index/getStarX (param $0 i32) (result f64)
   (local $1 i32)
   (local $2 i32)
+  (local $3 f64)
   global.get $assembly/index/stars
   local.get $0
   i32.const 2
@@ -1352,15 +1339,17 @@
   i32.add
   i32.load
   local.tee $0
-  i32.const 1300
+  i32.const 1292
   i32.gt_u
   if
    local.get $0
    i32.const 16
    i32.sub
    local.tee $1
-   local.get $1
    i32.load offset=4
+   local.set $2
+   local.get $1
+   local.get $2
    i32.const 1
    i32.add
    i32.store offset=4
@@ -1368,46 +1357,10 @@
    i32.load
    drop
   end
-  call $~lib/rt/tlsf/maybeInitialize
-  i32.const 24
-  i32.const 5
-  call $~lib/rt/tlsf/allocateBlock
-  i32.const 16
-  i32.add
-  local.tee $1
-  i32.const 24
-  call $~lib/memory/memory.fill
-  local.get $1
-  i32.const 1300
-  i32.gt_u
-  if
-   local.get $1
-   i32.const 16
-   i32.sub
-   local.tee $2
-   local.get $2
-   i32.load offset=4
-   i32.const 1
-   i32.add
-   i32.store offset=4
-   local.get $2
-   i32.load
-   drop
-  end
-  local.get $1
   local.get $0
   f64.load
-  f64.store
-  local.get $1
   local.get $0
-  f64.load offset=8
-  f64.store offset=8
-  local.get $1
-  local.get $0
-  f64.load offset=32
-  f64.store offset=16
-  local.get $0
-  i32.const 1300
+  i32.const 1292
   i32.gt_u
   if
    local.get $0
@@ -1415,7 +1368,88 @@
    i32.sub
    call $~lib/rt/pure/decrement
   end
-  local.get $1
+ )
+ (func $assembly/index/getStarY (param $0 i32) (result f64)
+  (local $1 i32)
+  (local $2 i32)
+  (local $3 f64)
+  global.get $assembly/index/stars
+  local.get $0
+  i32.const 2
+  i32.shl
+  i32.add
+  i32.load
+  local.tee $0
+  i32.const 1292
+  i32.gt_u
+  if
+   local.get $0
+   i32.const 16
+   i32.sub
+   local.tee $1
+   i32.load offset=4
+   local.set $2
+   local.get $1
+   local.get $2
+   i32.const 1
+   i32.add
+   i32.store offset=4
+   local.get $1
+   i32.load
+   drop
+  end
+  local.get $0
+  f64.load offset=8
+  local.get $0
+  i32.const 1292
+  i32.gt_u
+  if
+   local.get $0
+   i32.const 16
+   i32.sub
+   call $~lib/rt/pure/decrement
+  end
+ )
+ (func $assembly/index/getStarColor (param $0 i32) (result f64)
+  (local $1 i32)
+  (local $2 i32)
+  (local $3 f64)
+  global.get $assembly/index/stars
+  local.get $0
+  i32.const 2
+  i32.shl
+  i32.add
+  i32.load
+  local.tee $0
+  i32.const 1292
+  i32.gt_u
+  if
+   local.get $0
+   i32.const 16
+   i32.sub
+   local.tee $1
+   i32.load offset=4
+   local.set $2
+   local.get $1
+   local.get $2
+   i32.const 1
+   i32.add
+   i32.store offset=4
+   local.get $1
+   i32.load
+   drop
+  end
+  local.get $0
+  f64.load offset=32
+  local.get $0
+  i32.const 1292
+  i32.gt_u
+  if
+   local.get $0
+   i32.const 16
+   i32.sub
+   call $~lib/rt/pure/decrement
+  end
  )
  (func $assembly/index/clear
   (local $0 i32)
@@ -1423,7 +1457,7 @@
   call $~lib/staticarray/StaticArray<assembly/index/Star>#constructor
   global.get $assembly/index/stars
   local.tee $1
-  i32.const 1300
+  i32.const 1292
   i32.gt_u
   if
    local.get $1
@@ -1469,14 +1503,14 @@
        i32.const 8
        i32.sub
        i32.load
-       br_table $__inlined_func$~lib/rt/__visit_members $__inlined_func$~lib/rt/__visit_members $switch$1$case$4 $__inlined_func$~lib/rt/__visit_members $switch$1$case$6 $__inlined_func$~lib/rt/__visit_members $switch$1$default
+       br_table $__inlined_func$~lib/rt/__visit_members $__inlined_func$~lib/rt/__visit_members $switch$1$case$4 $__inlined_func$~lib/rt/__visit_members $switch$1$case$6 $switch$1$default
       end
       local.get $1
       i32.load
       local.tee $1
       if
        local.get $1
-       i32.const 1300
+       i32.const 1292
        i32.ge_u
        if
         local.get $1
@@ -1504,7 +1538,7 @@
        local.tee $2
        if
         local.get $2
-        i32.const 1300
+        i32.const 1292
         i32.ge_u
         if
          local.get $2

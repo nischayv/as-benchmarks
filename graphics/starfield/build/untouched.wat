@@ -1,16 +1,16 @@
 (module
  (type $i32_i32_=>_none (func (param i32 i32)))
  (type $none_=>_none (func))
- (type $i32_i32_=>_i32 (func (param i32 i32) (result i32)))
  (type $i32_=>_none (func (param i32)))
- (type $i32_=>_i32 (func (param i32) (result i32)))
+ (type $i32_i32_=>_i32 (func (param i32 i32) (result i32)))
  (type $i32_i32_i32_=>_none (func (param i32 i32 i32)))
+ (type $i32_=>_i32 (func (param i32) (result i32)))
+ (type $i32_=>_f64 (func (param i32) (result f64)))
  (type $none_=>_i32 (func (result i32)))
  (type $i32_i32_i32_=>_i32 (func (param i32 i32 i32) (result i32)))
  (type $i32_f64_f64_f64_f64_f64_=>_i32 (func (param i32 f64 f64 f64 f64 f64) (result i32)))
  (type $none_=>_f64 (func (result f64)))
  (type $i32_i32_i32_i32_=>_none (func (param i32 i32 i32 i32)))
- (type $i32_i32_f64_=>_none (func (param i32 i32 f64)))
  (type $i64_=>_none (func (param i64)))
  (type $i64_=>_i64 (func (param i64) (result i64)))
  (import "env" "abort" (func $~lib/builtins/abort (param i32 i32 i32 i32)))
@@ -22,7 +22,7 @@
  (data (i32.const 176) "\1c\00\00\00\01\00\00\00\01\00\00\00\1c\00\00\00I\00n\00v\00a\00l\00i\00d\00 \00l\00e\00n\00g\00t\00h\00")
  (data (i32.const 224) "&\00\00\00\01\00\00\00\01\00\00\00&\00\00\00~\00l\00i\00b\00/\00s\00t\00a\00t\00i\00c\00a\00r\00r\00a\00y\00.\00t\00s\00")
  (data (i32.const 288) "\18\00\00\00\01\00\00\00\01\00\00\00\18\00\00\00~\00l\00i\00b\00/\00m\00a\00t\00h\00.\00t\00s\00")
- (data (i32.const 336) "\06\00\00\00 \00\00\00\00\00\00\00 \00\00\00\00\00\00\00 \00\00\00\00\00\00\00 \00\00\00\00\00\00\00$A\00\00\00\00\00\00$\1a\00\00\00\00\00\00")
+ (data (i32.const 336) "\05\00\00\00 \00\00\00\00\00\00\00 \00\00\00\00\00\00\00 \00\00\00\00\00\00\00 \00\00\00\00\00\00\00$A\00\00\00\00\00\00")
  (table $0 1 funcref)
  (global $~lib/rt/tlsf/ROOT (mut i32) (i32.const 0))
  (global $~lib/ASC_LOW_MEMORY_LIMIT i32 (i32.const 0))
@@ -38,7 +38,7 @@
  (global $~lib/math/random_state1_32 (mut i32) (i32.const 0))
  (global $~argumentsLength (mut i32) (i32.const 0))
  (global $~lib/rt/__rtti_base i32 (i32.const 336))
- (global $~lib/heap/__heap_base i32 (i32.const 388))
+ (global $~lib/heap/__heap_base i32 (i32.const 380))
  (export "__setArgumentsLength" (func $~setArgumentsLength))
  (export "memory" (memory $0))
  (export "__alloc" (func $~lib/rt/tlsf/__alloc))
@@ -49,7 +49,9 @@
  (export "addStar" (func $assembly/index/addStar))
  (export "updateStars" (func $assembly/index/updateStars))
  (export "getStarsLength" (func $assembly/index/getStarsLength))
- (export "getStarInfo" (func $assembly/index/getStarInfo))
+ (export "getStarX" (func $assembly/index/getStarX))
+ (export "getStarY" (func $assembly/index/getStarY))
+ (export "getStarColor" (func $assembly/index/getStarColor))
  (export "clear" (func $assembly/index/clear))
  (start $~start)
  (func $~lib/rt/tlsf/removeBlock (param $0 i32) (param $1 i32)
@@ -2200,85 +2202,44 @@
  (func $assembly/index/getStarsLength (result i32)
   global.get $assembly/index/count
  )
- (func $~lib/staticarray/StaticArray<f64>#constructor (param $0 i32) (param $1 i32) (result i32)
-  (local $2 i32)
-  (local $3 i32)
-  local.get $1
-  i32.const 1073741808
-  i32.const 3
-  i32.shr_u
-  i32.gt_u
-  if
-   i32.const 192
-   i32.const 240
-   i32.const 83
-   i32.const 60
-   call $~lib/builtins/abort
-   unreachable
-  end
-  local.get $1
-  i32.const 3
-  i32.shl
-  local.set $2
-  local.get $2
-  i32.const 5
-  call $~lib/rt/tlsf/__alloc
-  local.set $3
-  local.get $3
-  i32.const 0
-  local.get $2
-  call $~lib/memory/memory.fill
-  local.get $3
-  call $~lib/rt/pure/__retain
- )
- (func $~lib/staticarray/StaticArray<f64>#__unchecked_set (param $0 i32) (param $1 i32) (param $2 f64)
-  i32.const 0
-  drop
-  local.get $0
-  local.get $1
-  i32.const 3
-  i32.shl
-  i32.add
-  local.get $2
-  f64.store
- )
- (func $assembly/index/getStarInfo (param $0 i32) (result i32)
+ (func $assembly/index/getStarX (param $0 i32) (result f64)
   (local $1 i32)
-  (local $2 i32)
-  (local $3 i32)
-  (local $4 i32)
+  (local $2 f64)
   global.get $assembly/index/stars
   local.get $0
   call $~lib/staticarray/StaticArray<assembly/index/Star>#__unchecked_get
   local.tee $1
-  call $~lib/rt/pure/__retain
-  local.set $2
-  i32.const 0
-  i32.const 3
-  call $~lib/staticarray/StaticArray<f64>#constructor
-  local.set $3
-  local.get $3
-  i32.const 0
-  local.get $2
   f64.load
-  call $~lib/staticarray/StaticArray<f64>#__unchecked_set
-  local.get $3
-  i32.const 1
-  local.get $2
-  f64.load offset=8
-  call $~lib/staticarray/StaticArray<f64>#__unchecked_set
-  local.get $3
-  i32.const 2
-  local.get $2
-  f64.load offset=32
-  call $~lib/staticarray/StaticArray<f64>#__unchecked_set
-  local.get $3
-  local.set $4
+  local.set $2
   local.get $1
   call $~lib/rt/pure/__release
   local.get $2
+ )
+ (func $assembly/index/getStarY (param $0 i32) (result f64)
+  (local $1 i32)
+  (local $2 f64)
+  global.get $assembly/index/stars
+  local.get $0
+  call $~lib/staticarray/StaticArray<assembly/index/Star>#__unchecked_get
+  local.tee $1
+  f64.load offset=8
+  local.set $2
+  local.get $1
   call $~lib/rt/pure/__release
-  local.get $4
+  local.get $2
+ )
+ (func $assembly/index/getStarColor (param $0 i32) (result f64)
+  (local $1 i32)
+  (local $2 f64)
+  global.get $assembly/index/stars
+  local.get $0
+  call $~lib/staticarray/StaticArray<assembly/index/Star>#__unchecked_get
+  local.tee $1
+  f64.load offset=32
+  local.set $2
+  local.get $1
+  call $~lib/rt/pure/__release
+  local.get $2
  )
  (func $assembly/index/clear
   (local $0 i32)
@@ -2472,43 +2433,33 @@
    end
   end
  )
- (func $~lib/staticarray/StaticArray<f64>#__visit_impl (param $0 i32) (param $1 i32)
-  i32.const 0
-  drop
- )
  (func $~lib/rt/__visit_members (param $0 i32) (param $1 i32)
   (local $2 i32)
   block $switch$1$default
-   block $switch$1$case$7
-    block $switch$1$case$6
-     block $switch$1$case$4
-      block $switch$1$case$2
-       local.get $0
-       i32.const 8
-       i32.sub
-       i32.load
-       br_table $switch$1$case$2 $switch$1$case$2 $switch$1$case$4 $switch$1$case$2 $switch$1$case$6 $switch$1$case$7 $switch$1$default
-      end
-      return
-     end
-     local.get $0
-     i32.load
-     local.tee $2
-     if
-      local.get $2
-      local.get $1
-      call $~lib/rt/pure/__visit
+   block $switch$1$case$6
+    block $switch$1$case$4
+     block $switch$1$case$2
+      local.get $0
+      i32.const 8
+      i32.sub
+      i32.load
+      br_table $switch$1$case$2 $switch$1$case$2 $switch$1$case$4 $switch$1$case$2 $switch$1$case$6 $switch$1$default
      end
      return
     end
     local.get $0
-    local.get $1
-    call $~lib/staticarray/StaticArray<assembly/index/Star>#__visit_impl
+    i32.load
+    local.tee $2
+    if
+     local.get $2
+     local.get $1
+     call $~lib/rt/pure/__visit
+    end
     return
    end
    local.get $0
    local.get $1
-   call $~lib/staticarray/StaticArray<f64>#__visit_impl
+   call $~lib/staticarray/StaticArray<assembly/index/Star>#__visit_impl
    return
   end
   unreachable

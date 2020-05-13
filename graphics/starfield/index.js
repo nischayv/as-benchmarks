@@ -6,7 +6,7 @@ const fpsElement = document.getElementById('fps')
 const option = document.getElementById('selectedOption')
 const starfieldJs = new Starfield()
 let wasmInstance
-let module
+let starfield
 let lastOption
 let fps = 0
 let accTime = 0
@@ -57,30 +57,33 @@ const updateFPS = () => {
 
 const animate = () => {
   if (option.value !== lastOption) {
-    if (module) {
-      module.clear()
+    if (starfield) {
+      starfield.clear()
     }
-    module = option.value === 'Javascript' ? starfieldJs : wasmInstance.instance.exports
+    console.log(wasmInstance.instance.exports)
+    starfield = option.value === 'Javascript' ? starfieldJs : wasmInstance.instance.exports
     lastOption = option.value
   }
 
   setTimeout(animate, 0)
 
   context.clearRect(0, 0, canvas.width, canvas.height) // clear the frame
-  module.addStar()
-  module.updateStars()
+  starfield.addStar()
+  starfield.updateStars()
 
-  for (let n = 0; n < starfieldJs.getStarsLength(); n++) {
-    const star = module.getStarInfo(n)
+  for (let n = 0; n < starfield.getStarsLength(); n++) {
+    const x = starfield.getStarX(n)
+    const y = starfield.getStarY(n)
+    const color = starfield.getStarColor(n)
     // use the color value for the R, G and B component
-    context.fillStyle = `rgb(${star[2]},${star[2]},${star[2]})`
+    context.fillStyle = `rgb(${color},${color},${color})`
     context.beginPath()
 
     // draw a circle
     context.arc(
-      400 + star[0],
-      400 + star[1],
-      Math.abs(star[1] / 200 + n / 300),
+      400 + x,
+      400 + y,
+      Math.abs(y / 200 + n / 300),
       0,
       2 * Math.PI
     )

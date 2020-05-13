@@ -15,7 +15,7 @@ export function addStar(): void {
   if (count < 1000) {
     // create a new star in the middle with random velocity
     // add the star to the array
-    unchecked(stars[count] = new Star())
+    unchecked((stars[count] = new Star()))
     count += 1
   }
 }
@@ -40,13 +40,16 @@ export function getStarsLength(): i32 {
   return count
 }
 
-export function getStarInfo(i: i32): StaticArray<f64> {
-  const star = unchecked(stars[i])
-  const result = new StaticArray<f64>(3)
-  unchecked((result[0] = star.x))
-  unchecked((result[1] = star.y))
-  unchecked((result[2] = star.color))
-  return result
+export function getStarX(i: i32): f64 {
+  return unchecked(stars[i].x)
+}
+
+export function getStarY(i: i32): f64 {
+  return unchecked(stars[i].y)
+}
+
+export function getStarColor(i: i32): f64 {
+  return unchecked(stars[i].color)
 }
 
 export function clear(): void {

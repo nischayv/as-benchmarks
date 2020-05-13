@@ -38,9 +38,16 @@ export class Starfield {
     return this.stars.length
   }
 
-  getStarInfo(i) {
-    const star = this.stars[i]
-    return [star.x, star.y, star.color]
+  getStarX(i) {
+    return this.stars[i].x
+  }
+
+  getStarY(i) {
+    return this.stars[i].y
+  }
+
+  getStarColor(i) {
+    return this.stars[i].color
   }
 
   clear() {
