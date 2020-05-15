@@ -174,7 +174,6 @@
  (global $~lib/math/res128_hi (mut i64) (i64.const 0))
  (global $~lib/util/math/log_tail (mut f64) (f64.const 0))
  (global $~lib/rt/__rtti_base i32 (i32.const 11968))
- (export "__setArgumentsLength" (func $~setArgumentsLength))
  (export "memory" (memory $0))
  (export "__alloc" (func $~lib/rt/tlsf/__alloc))
  (export "__retain" (func $~lib/rt/pure/__retain))
@@ -1215,9 +1214,6 @@
   end
   local.get $2
  )
- (func $~setArgumentsLength (param $0 i32)
-  nop
- )
  (func $~lib/math/NativeMath.exp (param $0 f64) (result f64)
   (local $1 f64)
   (local $2 i64)
@@ -2034,15 +2030,6 @@
   (local $3 i32)
   (local $4 i32)
   call $~lib/rt/tlsf/maybeInitialize
-  i32.const 0
-  i32.const 0
-  call $~lib/rt/tlsf/allocateBlock
-  i32.const 16
-  i32.add
-  local.tee $1
-  i32.const 0
-  call $~lib/memory/memory.fill
-  call $~lib/rt/tlsf/maybeInitialize
   i32.const 16
   i32.const 11
   call $~lib/rt/tlsf/allocateBlock
@@ -2057,9 +2044,9 @@
    i32.sub
    local.tee $2
    i32.load offset=4
-   local.set $3
+   local.set $1
    local.get $2
-   local.get $3
+   local.get $1
    i32.const 1
    i32.add
    i32.store offset=4
@@ -2079,10 +2066,19 @@
   local.get $0
   i32.const 0
   i32.store offset=12
-  local.get $1
+  call $~lib/rt/tlsf/maybeInitialize
+  i32.const 0
+  i32.const 0
+  call $~lib/rt/tlsf/allocateBlock
+  i32.const 16
+  i32.add
+  local.tee $1
+  i32.const 0
+  call $~lib/memory/memory.fill
   local.get $0
   i32.load
   local.tee $2
+  local.get $1
   i32.ne
   if
    local.get $1
@@ -2128,7 +2124,7 @@
   i32.store offset=12
   local.get $0
  )
- (func $~lib/staticarray/StaticArray<~lib/array/Array<assembly/bfs/Edge>>#__unchecked_set (param $0 i32) (param $1 i32) (param $2 i32)
+ (func $~lib/staticarray/StaticArray<~lib/array/Array<assembly/bfs/Edge>>#__uset (param $0 i32) (param $1 i32) (param $2 i32)
   (local $3 i32)
   (local $4 i32)
   local.get $2
@@ -3662,7 +3658,7 @@
     local.get $3
     call $~lib/array/Array<assembly/bfs/Edge>#constructor
     local.tee $0
-    call $~lib/staticarray/StaticArray<~lib/array/Array<assembly/bfs/Edge>>#__unchecked_set
+    call $~lib/staticarray/StaticArray<~lib/array/Array<assembly/bfs/Edge>>#__uset
     local.get $0
     i32.const 12164
     i32.gt_u
@@ -4063,7 +4059,7 @@
     local.get $10
     local.get $6
     local.get $2
-    call $~lib/staticarray/StaticArray<~lib/array/Array<assembly/bfs/Edge>>#__unchecked_set
+    call $~lib/staticarray/StaticArray<~lib/array/Array<assembly/bfs/Edge>>#__uset
     local.get $6
     local.get $11
     i32.add
@@ -6250,7 +6246,7 @@
     i32.load offset=4
     call $assembly/fft/fftSimple
     local.tee $2
-    call $~lib/staticarray/StaticArray<~lib/array/Array<assembly/bfs/Edge>>#__unchecked_set
+    call $~lib/staticarray/StaticArray<~lib/array/Array<assembly/bfs/Edge>>#__uset
     local.get $1
     i32.const 12164
     i32.gt_u
@@ -6319,7 +6315,7 @@
     i32.load offset=4
     call $assembly/fft/fftSimple
     local.tee $1
-    call $~lib/staticarray/StaticArray<~lib/array/Array<assembly/bfs/Edge>>#__unchecked_set
+    call $~lib/staticarray/StaticArray<~lib/array/Array<assembly/bfs/Edge>>#__uset
     local.get $0
     i32.const 12164
     i32.gt_u
@@ -6366,7 +6362,7 @@
     local.get $2
     call $assembly/fft/randomComplexArray
     local.tee $1
-    call $~lib/staticarray/StaticArray<~lib/array/Array<assembly/bfs/Edge>>#__unchecked_set
+    call $~lib/staticarray/StaticArray<~lib/array/Array<assembly/bfs/Edge>>#__uset
     local.get $1
     i32.const 12164
     i32.gt_u
@@ -7282,7 +7278,7 @@
     i32.const 1000
     call $~lib/staticarray/StaticArray<i32>#constructor
     local.tee $1
-    call $~lib/staticarray/StaticArray<~lib/array/Array<assembly/bfs/Edge>>#__unchecked_set
+    call $~lib/staticarray/StaticArray<~lib/array/Array<assembly/bfs/Edge>>#__uset
     local.get $1
     i32.const 12164
     i32.gt_u
@@ -7894,7 +7890,7 @@
     i32.const 1000
     call $~lib/staticarray/StaticArray<f64>#constructor
     local.tee $2
-    call $~lib/staticarray/StaticArray<~lib/array/Array<assembly/bfs/Edge>>#__unchecked_set
+    call $~lib/staticarray/StaticArray<~lib/array/Array<assembly/bfs/Edge>>#__uset
     local.get $2
     i32.const 12164
     i32.gt_u
@@ -7985,15 +7981,6 @@
     local.get $0
     i32.eqz
     if
-     local.get $0
-     i32.const 12164
-     i32.gt_u
-     if
-      local.get $0
-      i32.const 16
-      i32.sub
-      call $~lib/rt/pure/decrement
-     end
      i32.const 7712
      i32.const 1200
      i32.const 99
@@ -8327,6 +8314,44 @@
   (local $3 i32)
   (local $4 i32)
   (local $5 i32)
+  local.get $0
+  i32.eqz
+  if
+   call $~lib/rt/tlsf/maybeInitialize
+   i32.const 12
+   i32.const 2
+   call $~lib/rt/tlsf/allocateBlock
+   i32.const 16
+   i32.add
+   local.tee $0
+   i32.const 12164
+   i32.gt_u
+   if
+    local.get $0
+    i32.const 16
+    i32.sub
+    local.tee $2
+    i32.load offset=4
+    local.set $3
+    local.get $2
+    local.get $3
+    i32.const 1
+    i32.add
+    i32.store offset=4
+    local.get $2
+    i32.load
+    drop
+   end
+  end
+  local.get $0
+  i32.const 0
+  i32.store
+  local.get $0
+  i32.const 0
+  i32.store offset=4
+  local.get $0
+  i32.const 0
+  i32.store offset=8
   local.get $1
   i32.const 1073741808
   i32.gt_u
@@ -8349,47 +8374,9 @@
   local.get $1
   call $~lib/memory/memory.fill
   local.get $0
-  i32.eqz
-  if
-   call $~lib/rt/tlsf/maybeInitialize
-   i32.const 12
-   i32.const 2
-   call $~lib/rt/tlsf/allocateBlock
-   i32.const 16
-   i32.add
-   local.tee $0
-   i32.const 12164
-   i32.gt_u
-   if
-    local.get $0
-    i32.const 16
-    i32.sub
-    local.tee $1
-    i32.load offset=4
-    local.set $4
-    local.get $1
-    local.get $4
-    i32.const 1
-    i32.add
-    i32.store offset=4
-    local.get $1
-    i32.load
-    drop
-   end
-  end
-  local.get $0
-  i32.const 0
-  i32.store
-  local.get $0
-  i32.const 0
-  i32.store offset=4
-  local.get $0
-  i32.const 0
-  i32.store offset=8
-  local.get $3
-  local.get $0
   i32.load
   local.tee $1
+  local.get $3
   i32.ne
   if
    local.get $3

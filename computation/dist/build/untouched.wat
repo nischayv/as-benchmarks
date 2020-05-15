@@ -69,7 +69,6 @@
  (global $~lib/util/math/log_tail (mut f64) (f64.const 0))
  (global $~lib/rt/__rtti_base i32 (i32.const 11008))
  (global $~lib/heap/__heap_base i32 (i32.const 11204))
- (export "__setArgumentsLength" (func $~setArgumentsLength))
  (export "memory" (memory $0))
  (export "__alloc" (func $~lib/rt/tlsf/__alloc))
  (export "__retain" (func $~lib/rt/pure/__retain))
@@ -1798,6 +1797,7 @@
  (func $~lib/staticarray/StaticArray<f64>#constructor (param $0 i32) (param $1 i32) (result i32)
   (local $2 i32)
   (local $3 i32)
+  (local $4 i32)
   local.get $1
   i32.const 1073741808
   i32.const 3
@@ -1825,8 +1825,12 @@
   call $~lib/memory/memory.fill
   local.get $3
   call $~lib/rt/pure/__retain
+  local.set $4
+  local.get $0
+  call $~lib/rt/pure/__release
+  local.get $4
  )
- (func $~lib/staticarray/StaticArray<f64>#__unchecked_set (param $0 i32) (param $1 i32) (param $2 f64)
+ (func $~lib/staticarray/StaticArray<f64>#__uset (param $0 i32) (param $1 i32) (param $2 f64)
   i32.const 0
   drop
   local.get $0
@@ -1857,7 +1861,7 @@
     local.get $1
     local.get $2
     f64.const 0
-    call $~lib/staticarray/StaticArray<f64>#__unchecked_set
+    call $~lib/staticarray/StaticArray<f64>#__uset
     local.get $2
     i32.const 1
     i32.add
@@ -1866,10 +1870,6 @@
    end
   end
   local.get $1
- )
- (func $~setArgumentsLength (param $0 i32)
-  local.get $0
-  global.set $~argumentsLength
  )
  (func $~lib/math/NativeMath.exp (param $0 f64) (result f64)
   (local $1 f64)
@@ -2515,31 +2515,31 @@
   local.set $4
   local.get $4
   f64.floor
-  call $~lib/staticarray/StaticArray<f64>#__unchecked_set
+  call $~lib/staticarray/StaticArray<f64>#__uset
   local.get $0
   i32.load offset=12
   i32.const 1
   f64.const 0
-  call $~lib/staticarray/StaticArray<f64>#__unchecked_set
+  call $~lib/staticarray/StaticArray<f64>#__uset
   local.get $0
   i32.load offset=4
   i32.const 0
   local.get $3
   f64.const 2147483648
   f64.div
-  call $~lib/staticarray/StaticArray<f64>#__unchecked_set
+  call $~lib/staticarray/StaticArray<f64>#__uset
   local.get $0
   i32.load offset=4
   i32.const 127
   local.get $1
   f64.const 2147483648
   f64.div
-  call $~lib/staticarray/StaticArray<f64>#__unchecked_set
+  call $~lib/staticarray/StaticArray<f64>#__uset
   local.get $0
   i32.load offset=8
   i32.const 0
   f64.const 1
-  call $~lib/staticarray/StaticArray<f64>#__unchecked_set
+  call $~lib/staticarray/StaticArray<f64>#__uset
   local.get $0
   i32.load offset=8
   i32.const 127
@@ -2549,7 +2549,7 @@
   local.get $1
   f64.mul
   call $~lib/math/NativeMath.exp
-  call $~lib/staticarray/StaticArray<f64>#__unchecked_set
+  call $~lib/staticarray/StaticArray<f64>#__uset
   i32.const 126
   local.set $5
   loop $for-loop|0
@@ -2589,7 +2589,7 @@
     local.set $4
     local.get $4
     f64.floor
-    call $~lib/staticarray/StaticArray<f64>#__unchecked_set
+    call $~lib/staticarray/StaticArray<f64>#__uset
     local.get $1
     local.set $2
     local.get $0
@@ -2601,14 +2601,14 @@
     local.get $1
     f64.mul
     call $~lib/math/NativeMath.exp
-    call $~lib/staticarray/StaticArray<f64>#__unchecked_set
+    call $~lib/staticarray/StaticArray<f64>#__uset
     local.get $0
     i32.load offset=4
     local.get $5
     local.get $1
     f64.const 2147483648
     f64.div
-    call $~lib/staticarray/StaticArray<f64>#__unchecked_set
+    call $~lib/staticarray/StaticArray<f64>#__uset
     local.get $5
     i32.const 1
     i32.sub
@@ -2681,6 +2681,7 @@
  (func $~lib/staticarray/StaticArray<assembly/bfs/Node>#constructor (param $0 i32) (param $1 i32) (result i32)
   (local $2 i32)
   (local $3 i32)
+  (local $4 i32)
   local.get $1
   i32.const 1073741808
   i32.const 2
@@ -2708,10 +2709,15 @@
   call $~lib/memory/memory.fill
   local.get $3
   call $~lib/rt/pure/__retain
+  local.set $4
+  local.get $0
+  call $~lib/rt/pure/__release
+  local.get $4
  )
  (func $~lib/staticarray/StaticArray<bool>#constructor (param $0 i32) (param $1 i32) (result i32)
   (local $2 i32)
   (local $3 i32)
+  (local $4 i32)
   local.get $1
   i32.const 1073741808
   i32.const 0
@@ -2739,10 +2745,15 @@
   call $~lib/memory/memory.fill
   local.get $3
   call $~lib/rt/pure/__retain
+  local.set $4
+  local.get $0
+  call $~lib/rt/pure/__release
+  local.get $4
  )
  (func $~lib/staticarray/StaticArray<i32>#constructor (param $0 i32) (param $1 i32) (result i32)
   (local $2 i32)
   (local $3 i32)
+  (local $4 i32)
   local.get $1
   i32.const 1073741808
   i32.const 2
@@ -2770,10 +2781,15 @@
   call $~lib/memory/memory.fill
   local.get $3
   call $~lib/rt/pure/__retain
+  local.set $4
+  local.get $0
+  call $~lib/rt/pure/__release
+  local.get $4
  )
  (func $~lib/staticarray/StaticArray<~lib/array/Array<assembly/bfs/Edge>>#constructor (param $0 i32) (param $1 i32) (result i32)
   (local $2 i32)
   (local $3 i32)
+  (local $4 i32)
   local.get $1
   i32.const 1073741808
   i32.const 2
@@ -2801,6 +2817,10 @@
   call $~lib/memory/memory.fill
   local.get $3
   call $~lib/rt/pure/__retain
+  local.set $4
+  local.get $0
+  call $~lib/rt/pure/__release
+  local.get $4
  )
  (func $~lib/array/Array<assembly/bfs/Edge>#constructor (param $0 i32) (param $1 i32) (result i32)
   (local $2 i32)
@@ -2808,6 +2828,27 @@
   (local $4 i32)
   (local $5 i32)
   (local $6 i32)
+  local.get $0
+  i32.eqz
+  if
+   i32.const 16
+   i32.const 11
+   call $~lib/rt/tlsf/__alloc
+   call $~lib/rt/pure/__retain
+   local.set $0
+  end
+  local.get $0
+  i32.const 0
+  i32.store
+  local.get $0
+  i32.const 0
+  i32.store offset=4
+  local.get $0
+  i32.const 0
+  i32.store offset=8
+  local.get $0
+  i32.const 0
+  i32.store offset=12
   local.get $1
   i32.const 1073741808
   i32.const 2
@@ -2833,27 +2874,6 @@
   i32.const 0
   local.get $2
   call $~lib/memory/memory.fill
-  local.get $0
-  i32.eqz
-  if
-   i32.const 16
-   i32.const 11
-   call $~lib/rt/tlsf/__alloc
-   call $~lib/rt/pure/__retain
-   local.set $0
-  end
-  local.get $0
-  i32.const 0
-  i32.store
-  local.get $0
-  i32.const 0
-  i32.store offset=4
-  local.get $0
-  i32.const 0
-  i32.store offset=8
-  local.get $0
-  i32.const 0
-  i32.store offset=12
   local.get $0
   local.tee $4
   local.get $3
@@ -2882,7 +2902,7 @@
   i32.store offset=12
   local.get $0
  )
- (func $~lib/staticarray/StaticArray<~lib/array/Array<assembly/bfs/Edge>>#__unchecked_set (param $0 i32) (param $1 i32) (param $2 i32)
+ (func $~lib/staticarray/StaticArray<~lib/array/Array<assembly/bfs/Edge>>#__uset (param $0 i32) (param $1 i32) (param $2 i32)
   (local $3 i32)
   (local $4 i32)
   local.get $2
@@ -2976,7 +2996,7 @@
   global.set $assembly/common/seed
   global.get $assembly/common/seed
  )
- (func $~lib/staticarray/StaticArray<~lib/array/Array<assembly/bfs/Edge>>#__unchecked_get (param $0 i32) (param $1 i32) (result i32)
+ (func $~lib/staticarray/StaticArray<~lib/array/Array<assembly/bfs/Edge>>#__uget (param $0 i32) (param $1 i32) (result i32)
   local.get $0
   local.get $1
   i32.const 2
@@ -4574,7 +4594,7 @@
   i32.store offset=4
   local.get $0
  )
- (func $~lib/staticarray/StaticArray<assembly/bfs/Node>#__unchecked_set (param $0 i32) (param $1 i32) (param $2 i32)
+ (func $~lib/staticarray/StaticArray<assembly/bfs/Node>#__uset (param $0 i32) (param $1 i32) (param $2 i32)
   (local $3 i32)
   (local $4 i32)
   local.get $2
@@ -4605,7 +4625,7 @@
   local.get $2
   call $~lib/rt/pure/__release
  )
- (func $~lib/staticarray/StaticArray<bool>#__unchecked_set (param $0 i32) (param $1 i32) (param $2 i32)
+ (func $~lib/staticarray/StaticArray<bool>#__uset (param $0 i32) (param $1 i32) (param $2 i32)
   i32.const 0
   drop
   local.get $0
@@ -4616,7 +4636,7 @@
   local.get $2
   i32.store8
  )
- (func $~lib/array/Array<assembly/bfs/Edge>#__unchecked_get (param $0 i32) (param $1 i32) (result i32)
+ (func $~lib/array/Array<assembly/bfs/Edge>#__uget (param $0 i32) (param $1 i32) (result i32)
   local.get $0
   i32.load offset=4
   local.get $1
@@ -4626,7 +4646,7 @@
   i32.load
   call $~lib/rt/pure/__retain
  )
- (func $~lib/staticarray/StaticArray<i32>#__unchecked_set (param $0 i32) (param $1 i32) (param $2 i32)
+ (func $~lib/staticarray/StaticArray<i32>#__uset (param $0 i32) (param $1 i32) (param $2 i32)
   i32.const 0
   drop
   local.get $0
@@ -4638,24 +4658,6 @@
   i32.store
  )
  (func $assembly/bfs/Graph#constructor (param $0 i32) (param $1 i32) (param $2 i32) (param $3 i32) (param $4 i32) (param $5 i32) (param $6 i32) (result i32)
-  local.get $1
-  call $~lib/rt/pure/__retain
-  local.set $1
-  local.get $2
-  call $~lib/rt/pure/__retain
-  local.set $2
-  local.get $3
-  call $~lib/rt/pure/__retain
-  local.set $3
-  local.get $4
-  call $~lib/rt/pure/__retain
-  local.set $4
-  local.get $5
-  call $~lib/rt/pure/__retain
-  local.set $5
-  local.get $6
-  call $~lib/rt/pure/__retain
-  local.set $6
   local.get $0
   i32.eqz
   if
@@ -4689,6 +4691,24 @@
   local.get $6
   call $~lib/rt/pure/__retain
   i32.store offset=20
+  local.get $1
+  call $~lib/rt/pure/__retain
+  local.set $1
+  local.get $2
+  call $~lib/rt/pure/__retain
+  local.set $2
+  local.get $3
+  call $~lib/rt/pure/__retain
+  local.set $3
+  local.get $4
+  call $~lib/rt/pure/__retain
+  local.set $4
+  local.get $5
+  call $~lib/rt/pure/__retain
+  local.set $5
+  local.get $6
+  call $~lib/rt/pure/__retain
+  local.set $6
   local.get $1
   call $~lib/rt/pure/__release
   local.get $2
@@ -4764,7 +4784,7 @@
     i32.const 0
     call $~lib/array/Array<assembly/bfs/Edge>#constructor
     local.tee $9
-    call $~lib/staticarray/StaticArray<~lib/array/Array<assembly/bfs/Edge>>#__unchecked_set
+    call $~lib/staticarray/StaticArray<~lib/array/Array<assembly/bfs/Edge>>#__uset
     local.get $9
     call $~lib/rt/pure/__release
     local.get $7
@@ -4800,7 +4820,7 @@
     local.set $10
     local.get $6
     local.get $7
-    call $~lib/staticarray/StaticArray<~lib/array/Array<assembly/bfs/Edge>>#__unchecked_get
+    call $~lib/staticarray/StaticArray<~lib/array/Array<assembly/bfs/Edge>>#__uget
     local.tee $9
     call $~lib/rt/pure/__retain
     local.set $11
@@ -4848,7 +4868,7 @@
       local.get $6
       local.get $14
       i32.trunc_f64_s
-      call $~lib/staticarray/StaticArray<~lib/array/Array<assembly/bfs/Edge>>#__unchecked_get
+      call $~lib/staticarray/StaticArray<~lib/array/Array<assembly/bfs/Edge>>#__uget
       local.tee $17
       i32.const 0
       local.get $7
@@ -4895,7 +4915,7 @@
    if
     local.get $6
     local.get $8
-    call $~lib/staticarray/StaticArray<~lib/array/Array<assembly/bfs/Edge>>#__unchecked_get
+    call $~lib/staticarray/StaticArray<~lib/array/Array<assembly/bfs/Edge>>#__uget
     local.tee $9
     call $~lib/array/Array<assembly/bfs/Edge>#get:length
     local.set $12
@@ -4906,19 +4926,19 @@
     local.get $12
     call $assembly/bfs/Node#constructor
     local.tee $13
-    call $~lib/staticarray/StaticArray<assembly/bfs/Node>#__unchecked_set
+    call $~lib/staticarray/StaticArray<assembly/bfs/Node>#__uset
     local.get $2
     local.get $8
     i32.const 0
-    call $~lib/staticarray/StaticArray<bool>#__unchecked_set
+    call $~lib/staticarray/StaticArray<bool>#__uset
     local.get $3
     local.get $8
     i32.const 0
-    call $~lib/staticarray/StaticArray<bool>#__unchecked_set
+    call $~lib/staticarray/StaticArray<bool>#__uset
     local.get $4
     local.get $8
     i32.const 0
-    call $~lib/staticarray/StaticArray<bool>#__unchecked_set
+    call $~lib/staticarray/StaticArray<bool>#__uset
     local.get $7
     local.get $12
     i32.add
@@ -4937,11 +4957,11 @@
   local.get $2
   i32.const 0
   i32.const 1
-  call $~lib/staticarray/StaticArray<bool>#__unchecked_set
+  call $~lib/staticarray/StaticArray<bool>#__uset
   local.get $4
   i32.const 0
   i32.const 1
-  call $~lib/staticarray/StaticArray<bool>#__unchecked_set
+  call $~lib/staticarray/StaticArray<bool>#__uset
   i32.const 0
   local.get $7
   call $~lib/staticarray/StaticArray<i32>#constructor
@@ -4959,13 +4979,13 @@
    if
     local.get $6
     local.get $13
-    call $~lib/staticarray/StaticArray<~lib/array/Array<assembly/bfs/Edge>>#__unchecked_get
+    call $~lib/staticarray/StaticArray<~lib/array/Array<assembly/bfs/Edge>>#__uget
     local.tee $9
     call $~lib/array/Array<assembly/bfs/Edge>#get:length
     local.set $18
     local.get $6
     local.get $13
-    call $~lib/staticarray/StaticArray<~lib/array/Array<assembly/bfs/Edge>>#__unchecked_get
+    call $~lib/staticarray/StaticArray<~lib/array/Array<assembly/bfs/Edge>>#__uget
     local.tee $17
     call $~lib/rt/pure/__retain
     local.set $16
@@ -4982,11 +5002,11 @@
       local.get $11
       local.get $16
       local.get $19
-      call $~lib/array/Array<assembly/bfs/Edge>#__unchecked_get
+      call $~lib/array/Array<assembly/bfs/Edge>#__uget
       local.tee $21
       f64.load
       i32.trunc_f64_s
-      call $~lib/staticarray/StaticArray<i32>#__unchecked_set
+      call $~lib/staticarray/StaticArray<i32>#__uset
       local.get $11
       i32.const 1
       i32.add
@@ -5025,7 +5045,7 @@
     local.get $5
     local.get $13
     i32.const -1
-    call $~lib/staticarray/StaticArray<i32>#__unchecked_set
+    call $~lib/staticarray/StaticArray<i32>#__uset
     local.get $13
     i32.const 1
     i32.add
@@ -5036,7 +5056,7 @@
   local.get $5
   i32.const 0
   i32.const 0
-  call $~lib/staticarray/StaticArray<i32>#__unchecked_set
+  call $~lib/staticarray/StaticArray<i32>#__uset
   i32.const 0
   local.get $1
   local.get $2
@@ -5065,7 +5085,7 @@
  (func $assembly/common/performance.now (result f64)
   call $assembly/common/performanceNow
  )
- (func $~lib/staticarray/StaticArray<bool>#__unchecked_get (param $0 i32) (param $1 i32) (result i32)
+ (func $~lib/staticarray/StaticArray<bool>#__uget (param $0 i32) (param $1 i32) (result i32)
   local.get $0
   local.get $1
   i32.const 0
@@ -5073,7 +5093,7 @@
   i32.add
   i32.load8_u
  )
- (func $~lib/staticarray/StaticArray<i32>#__unchecked_get (param $0 i32) (param $1 i32) (result i32)
+ (func $~lib/staticarray/StaticArray<i32>#__uget (param $0 i32) (param $1 i32) (result i32)
   local.get $0
   local.get $1
   i32.const 2
@@ -5081,7 +5101,7 @@
   i32.add
   i32.load
  )
- (func $~lib/staticarray/StaticArray<assembly/bfs/Node>#__unchecked_get (param $0 i32) (param $1 i32) (result i32)
+ (func $~lib/staticarray/StaticArray<assembly/bfs/Node>#__uget (param $0 i32) (param $1 i32) (result i32)
   local.get $0
   local.get $1
   i32.const 2
@@ -5158,19 +5178,19 @@
     if
      local.get $2
      local.get $10
-     call $~lib/staticarray/StaticArray<bool>#__unchecked_get
+     call $~lib/staticarray/StaticArray<bool>#__uget
      if
       local.get $2
       local.get $10
       i32.const 0
-      call $~lib/staticarray/StaticArray<bool>#__unchecked_set
+      call $~lib/staticarray/StaticArray<bool>#__uset
       local.get $5
       local.get $10
-      call $~lib/staticarray/StaticArray<i32>#__unchecked_get
+      call $~lib/staticarray/StaticArray<i32>#__uget
       local.set $12
       local.get $1
       local.get $10
-      call $~lib/staticarray/StaticArray<assembly/bfs/Node>#__unchecked_get
+      call $~lib/staticarray/StaticArray<assembly/bfs/Node>#__uget
       local.tee $13
       call $~lib/rt/pure/__retain
       local.set $14
@@ -5193,11 +5213,11 @@
        if
         local.get $6
         local.get $17
-        call $~lib/staticarray/StaticArray<i32>#__unchecked_get
+        call $~lib/staticarray/StaticArray<i32>#__uget
         local.set $19
         local.get $4
         local.get $19
-        call $~lib/staticarray/StaticArray<bool>#__unchecked_get
+        call $~lib/staticarray/StaticArray<bool>#__uget
         i32.eqz
         if
          local.get $5
@@ -5205,11 +5225,11 @@
          local.get $12
          i32.const 1
          i32.add
-         call $~lib/staticarray/StaticArray<i32>#__unchecked_set
+         call $~lib/staticarray/StaticArray<i32>#__uset
          local.get $3
          local.get $19
          i32.const 1
-         call $~lib/staticarray/StaticArray<bool>#__unchecked_set
+         call $~lib/staticarray/StaticArray<bool>#__uset
         end
         local.get $17
         i32.const 1
@@ -5241,22 +5261,22 @@
     if
      local.get $3
      local.get $10
-     call $~lib/staticarray/StaticArray<bool>#__unchecked_get
+     call $~lib/staticarray/StaticArray<bool>#__uget
      if
       local.get $2
       local.get $10
       i32.const 1
-      call $~lib/staticarray/StaticArray<bool>#__unchecked_set
+      call $~lib/staticarray/StaticArray<bool>#__uset
       local.get $4
       local.get $10
       i32.const 1
-      call $~lib/staticarray/StaticArray<bool>#__unchecked_set
+      call $~lib/staticarray/StaticArray<bool>#__uset
       i32.const 1
       local.set $8
       local.get $3
       local.get $10
       i32.const 0
-      call $~lib/staticarray/StaticArray<bool>#__unchecked_set
+      call $~lib/staticarray/StaticArray<bool>#__uset
      end
      local.get $10
      i32.const 1
@@ -5299,6 +5319,7 @@
  (func $~lib/staticarray/StaticArray<assembly/fft/PolarArray>#constructor (param $0 i32) (param $1 i32) (result i32)
   (local $2 i32)
   (local $3 i32)
+  (local $4 i32)
   local.get $1
   i32.const 1073741808
   i32.const 2
@@ -5326,6 +5347,10 @@
   call $~lib/memory/memory.fill
   local.get $3
   call $~lib/rt/pure/__retain
+  local.set $4
+  local.get $0
+  call $~lib/rt/pure/__release
+  local.get $4
  )
  (func $assembly/common/commonRandomJS (result f64)
   (local $0 i32)
@@ -5339,12 +5364,6 @@
   f64.abs
  )
  (func $assembly/fft/PolarArray#constructor (param $0 i32) (param $1 i32) (param $2 i32) (result i32)
-  local.get $1
-  call $~lib/rt/pure/__retain
-  local.set $1
-  local.get $2
-  call $~lib/rt/pure/__retain
-  local.set $2
   local.get $0
   i32.eqz
   if
@@ -5362,6 +5381,12 @@
   local.get $2
   call $~lib/rt/pure/__retain
   i32.store offset=4
+  local.get $1
+  call $~lib/rt/pure/__retain
+  local.set $1
+  local.get $2
+  call $~lib/rt/pure/__retain
+  local.set $2
   local.get $1
   call $~lib/rt/pure/__release
   local.get $2
@@ -5397,7 +5422,7 @@
     f64.mul
     f64.const 1
     f64.sub
-    call $~lib/staticarray/StaticArray<f64>#__unchecked_set
+    call $~lib/staticarray/StaticArray<f64>#__uset
     local.get $2
     local.get $3
     call $assembly/common/commonRandomJS
@@ -5405,7 +5430,7 @@
     f64.mul
     f64.const 1
     f64.sub
-    call $~lib/staticarray/StaticArray<f64>#__unchecked_set
+    call $~lib/staticarray/StaticArray<f64>#__uset
     local.get $3
     i32.const 1
     i32.add
@@ -5424,7 +5449,7 @@
   call $~lib/rt/pure/__release
   local.get $3
  )
- (func $~lib/staticarray/StaticArray<assembly/fft/PolarArray>#__unchecked_set (param $0 i32) (param $1 i32) (param $2 i32)
+ (func $~lib/staticarray/StaticArray<assembly/fft/PolarArray>#__uset (param $0 i32) (param $1 i32) (param $2 i32)
   (local $3 i32)
   (local $4 i32)
   local.get $2
@@ -5478,7 +5503,7 @@
     local.get $0
     call $assembly/fft/randomComplexArray
     local.tee $4
-    call $~lib/staticarray/StaticArray<assembly/fft/PolarArray>#__unchecked_set
+    call $~lib/staticarray/StaticArray<assembly/fft/PolarArray>#__uset
     local.get $4
     call $~lib/rt/pure/__release
     local.get $2
@@ -5498,7 +5523,7 @@
   i32.const 2
   i32.shr_u
  )
- (func $~lib/staticarray/StaticArray<assembly/fft/PolarArray>#__unchecked_get (param $0 i32) (param $1 i32) (result i32)
+ (func $~lib/staticarray/StaticArray<assembly/fft/PolarArray>#__uget (param $0 i32) (param $1 i32) (result i32)
   local.get $0
   local.get $1
   i32.const 2
@@ -5515,7 +5540,7 @@
   i32.const 3
   i32.shr_u
  )
- (func $~lib/staticarray/StaticArray<f64>#__unchecked_get (param $0 i32) (param $1 i32) (result f64)
+ (func $~lib/staticarray/StaticArray<f64>#__uget (param $0 i32) (param $1 i32) (result f64)
   local.get $0
   local.get $1
   i32.const 3
@@ -6609,14 +6634,14 @@
    i32.const 0
    local.get $0
    i32.const 0
-   call $~lib/staticarray/StaticArray<f64>#__unchecked_get
-   call $~lib/staticarray/StaticArray<f64>#__unchecked_set
+   call $~lib/staticarray/StaticArray<f64>#__uget
+   call $~lib/staticarray/StaticArray<f64>#__uset
    local.get $4
    i32.const 0
    local.get $1
    i32.const 0
-   call $~lib/staticarray/StaticArray<f64>#__unchecked_get
-   call $~lib/staticarray/StaticArray<f64>#__unchecked_set
+   call $~lib/staticarray/StaticArray<f64>#__uget
+   call $~lib/staticarray/StaticArray<f64>#__uset
    i32.const 0
    local.get $3
    local.get $4
@@ -6668,16 +6693,16 @@
     i32.const 2
     local.get $10
     i32.mul
-    call $~lib/staticarray/StaticArray<f64>#__unchecked_get
-    call $~lib/staticarray/StaticArray<f64>#__unchecked_set
+    call $~lib/staticarray/StaticArray<f64>#__uget
+    call $~lib/staticarray/StaticArray<f64>#__uset
     local.get $7
     local.get $10
     local.get $1
     i32.const 2
     local.get $10
     i32.mul
-    call $~lib/staticarray/StaticArray<f64>#__unchecked_get
-    call $~lib/staticarray/StaticArray<f64>#__unchecked_set
+    call $~lib/staticarray/StaticArray<f64>#__uget
+    call $~lib/staticarray/StaticArray<f64>#__uset
     local.get $8
     local.get $10
     local.get $0
@@ -6686,8 +6711,8 @@
     i32.mul
     i32.const 1
     i32.add
-    call $~lib/staticarray/StaticArray<f64>#__unchecked_get
-    call $~lib/staticarray/StaticArray<f64>#__unchecked_set
+    call $~lib/staticarray/StaticArray<f64>#__uget
+    call $~lib/staticarray/StaticArray<f64>#__uset
     local.get $9
     local.get $10
     local.get $1
@@ -6696,8 +6721,8 @@
     i32.mul
     i32.const 1
     i32.add
-    call $~lib/staticarray/StaticArray<f64>#__unchecked_get
-    call $~lib/staticarray/StaticArray<f64>#__unchecked_set
+    call $~lib/staticarray/StaticArray<f64>#__uget
+    call $~lib/staticarray/StaticArray<f64>#__uset
     local.get $10
     i32.const 1
     i32.add
@@ -6763,11 +6788,11 @@
     local.set $20
     local.get $14
     local.get $16
-    call $~lib/staticarray/StaticArray<f64>#__unchecked_get
+    call $~lib/staticarray/StaticArray<f64>#__uget
     local.set $19
     local.get $15
     local.get $16
-    call $~lib/staticarray/StaticArray<f64>#__unchecked_get
+    call $~lib/staticarray/StaticArray<f64>#__uget
     local.set $18
     local.get $14
     local.get $16
@@ -6780,7 +6805,7 @@
     f64.load offset=8
     f64.mul
     f64.sub
-    call $~lib/staticarray/StaticArray<f64>#__unchecked_set
+    call $~lib/staticarray/StaticArray<f64>#__uset
     local.get $15
     local.get $16
     local.get $19
@@ -6792,7 +6817,7 @@
     f64.load
     f64.mul
     f64.add
-    call $~lib/staticarray/StaticArray<f64>#__unchecked_set
+    call $~lib/staticarray/StaticArray<f64>#__uset
     local.get $20
     call $~lib/rt/pure/__release
     local.get $16
@@ -6813,32 +6838,32 @@
    if
     local.get $12
     local.get $16
-    call $~lib/staticarray/StaticArray<f64>#__unchecked_get
+    call $~lib/staticarray/StaticArray<f64>#__uget
     local.set $18
     local.get $14
     local.get $16
-    call $~lib/staticarray/StaticArray<f64>#__unchecked_get
+    call $~lib/staticarray/StaticArray<f64>#__uget
     local.set $19
     local.get $13
     local.get $16
-    call $~lib/staticarray/StaticArray<f64>#__unchecked_get
+    call $~lib/staticarray/StaticArray<f64>#__uget
     local.set $21
     local.get $15
     local.get $16
-    call $~lib/staticarray/StaticArray<f64>#__unchecked_get
+    call $~lib/staticarray/StaticArray<f64>#__uget
     local.set $22
     local.get $3
     local.get $16
     local.get $18
     local.get $19
     f64.add
-    call $~lib/staticarray/StaticArray<f64>#__unchecked_set
+    call $~lib/staticarray/StaticArray<f64>#__uset
     local.get $4
     local.get $16
     local.get $21
     local.get $22
     f64.add
-    call $~lib/staticarray/StaticArray<f64>#__unchecked_set
+    call $~lib/staticarray/StaticArray<f64>#__uset
     local.get $3
     local.get $16
     local.get $5
@@ -6846,7 +6871,7 @@
     local.get $18
     local.get $19
     f64.sub
-    call $~lib/staticarray/StaticArray<f64>#__unchecked_set
+    call $~lib/staticarray/StaticArray<f64>#__uset
     local.get $4
     local.get $16
     local.get $5
@@ -6854,7 +6879,7 @@
     local.get $21
     local.get $22
     f64.sub
-    call $~lib/staticarray/StaticArray<f64>#__unchecked_set
+    call $~lib/staticarray/StaticArray<f64>#__uset
     local.get $16
     i32.const 1
     i32.add
@@ -6930,7 +6955,7 @@
    if
     local.get $0
     local.get $4
-    call $~lib/staticarray/StaticArray<assembly/fft/PolarArray>#__unchecked_get
+    call $~lib/staticarray/StaticArray<assembly/fft/PolarArray>#__uget
     local.tee $6
     call $~lib/rt/pure/__retain
     local.set $7
@@ -6953,7 +6978,7 @@
      if
       local.get $0
       local.get $10
-      call $~lib/staticarray/StaticArray<assembly/fft/PolarArray>#__unchecked_get
+      call $~lib/staticarray/StaticArray<assembly/fft/PolarArray>#__uget
       local.tee $12
       call $~lib/rt/pure/__retain
       local.set $13
@@ -6967,32 +6992,32 @@
       local.set $15
       local.get $8
       local.get $10
-      call $~lib/staticarray/StaticArray<f64>#__unchecked_get
+      call $~lib/staticarray/StaticArray<f64>#__uget
       local.set $1
       local.get $9
       local.get $10
-      call $~lib/staticarray/StaticArray<f64>#__unchecked_get
+      call $~lib/staticarray/StaticArray<f64>#__uget
       local.set $2
       local.get $8
       local.get $10
       local.get $14
       local.get $4
-      call $~lib/staticarray/StaticArray<f64>#__unchecked_get
-      call $~lib/staticarray/StaticArray<f64>#__unchecked_set
+      call $~lib/staticarray/StaticArray<f64>#__uget
+      call $~lib/staticarray/StaticArray<f64>#__uset
       local.get $9
       local.get $10
       local.get $15
       local.get $4
-      call $~lib/staticarray/StaticArray<f64>#__unchecked_get
-      call $~lib/staticarray/StaticArray<f64>#__unchecked_set
+      call $~lib/staticarray/StaticArray<f64>#__uget
+      call $~lib/staticarray/StaticArray<f64>#__uset
       local.get $14
       local.get $4
       local.get $1
-      call $~lib/staticarray/StaticArray<f64>#__unchecked_set
+      call $~lib/staticarray/StaticArray<f64>#__uset
       local.get $15
       local.get $4
       local.get $2
-      call $~lib/staticarray/StaticArray<f64>#__unchecked_set
+      call $~lib/staticarray/StaticArray<f64>#__uset
       local.get $12
       call $~lib/rt/pure/__release
       local.get $13
@@ -7055,7 +7080,7 @@
    if
     local.get $0
     local.get $3
-    call $~lib/staticarray/StaticArray<assembly/fft/PolarArray>#__unchecked_get
+    call $~lib/staticarray/StaticArray<assembly/fft/PolarArray>#__uget
     local.tee $5
     call $~lib/rt/pure/__retain
     local.set $6
@@ -7067,7 +7092,7 @@
     i32.load offset=4
     call $assembly/fft/fftSimple
     local.tee $7
-    call $~lib/staticarray/StaticArray<assembly/fft/PolarArray>#__unchecked_set
+    call $~lib/staticarray/StaticArray<assembly/fft/PolarArray>#__uset
     local.get $5
     call $~lib/rt/pure/__release
     local.get $6
@@ -7094,7 +7119,7 @@
    if
     local.get $2
     local.get $3
-    call $~lib/staticarray/StaticArray<assembly/fft/PolarArray>#__unchecked_get
+    call $~lib/staticarray/StaticArray<assembly/fft/PolarArray>#__uget
     local.tee $7
     call $~lib/rt/pure/__retain
     local.set $6
@@ -7106,7 +7131,7 @@
     i32.load offset=4
     call $assembly/fft/fftSimple
     local.tee $5
-    call $~lib/staticarray/StaticArray<assembly/fft/PolarArray>#__unchecked_set
+    call $~lib/staticarray/StaticArray<assembly/fft/PolarArray>#__uset
     local.get $7
     call $~lib/rt/pure/__release
     local.get $6
@@ -7216,7 +7241,7 @@
        f64.add
        i32.trunc_f64_s
        call $assembly/common/commonRandomJS
-       call $~lib/staticarray/StaticArray<f64>#__unchecked_set
+       call $~lib/staticarray/StaticArray<f64>#__uset
       else
        local.get $4
        local.get $6
@@ -7232,7 +7257,7 @@
         f64.add
         i32.trunc_f64_s
         f64.const 1
-        call $~lib/staticarray/StaticArray<f64>#__unchecked_set
+        call $~lib/staticarray/StaticArray<f64>#__uset
        else
         local.get $2
         local.get $4
@@ -7244,7 +7269,7 @@
         f64.add
         i32.trunc_f64_s
         f64.const 0
-        call $~lib/staticarray/StaticArray<f64>#__unchecked_set
+        call $~lib/staticarray/StaticArray<f64>#__uset
        end
       end
       local.get $6
@@ -7295,7 +7320,7 @@
        f64.add
        i32.trunc_f64_s
        f64.const 0
-       call $~lib/staticarray/StaticArray<f64>#__unchecked_set
+       call $~lib/staticarray/StaticArray<f64>#__uset
       else
        local.get $3
        local.get $4
@@ -7307,7 +7332,7 @@
        f64.add
        i32.trunc_f64_s
        call $assembly/common/commonRandomJS
-       call $~lib/staticarray/StaticArray<f64>#__unchecked_set
+       call $~lib/staticarray/StaticArray<f64>#__uset
       end
       local.get $6
       i32.const 1
@@ -7365,7 +7390,7 @@
         f64.convert_i32_s
         f64.add
         i32.trunc_f64_s
-        call $~lib/staticarray/StaticArray<f64>#__unchecked_get
+        call $~lib/staticarray/StaticArray<f64>#__uget
         local.get $3
         local.get $6
         f64.convert_i32_s
@@ -7375,7 +7400,7 @@
         f64.convert_i32_s
         f64.add
         i32.trunc_f64_s
-        call $~lib/staticarray/StaticArray<f64>#__unchecked_get
+        call $~lib/staticarray/StaticArray<f64>#__uget
         f64.mul
         f64.add
         local.set $8
@@ -7396,7 +7421,7 @@
       f64.add
       i32.trunc_f64_s
       local.get $8
-      call $~lib/staticarray/StaticArray<f64>#__unchecked_set
+      call $~lib/staticarray/StaticArray<f64>#__uset
       local.get $6
       i32.const 1
       i32.add
@@ -7453,7 +7478,7 @@
       i32.mul
       local.get $6
       i32.add
-      call $~lib/staticarray/StaticArray<f64>#__unchecked_get
+      call $~lib/staticarray/StaticArray<f64>#__uget
       local.set $3
       i32.const 0
       local.set $2
@@ -7471,14 +7496,14 @@
         i32.mul
         local.get $2
         i32.add
-        call $~lib/staticarray/StaticArray<f64>#__unchecked_get
+        call $~lib/staticarray/StaticArray<f64>#__uget
         local.get $0
         local.get $2
         local.get $1
         i32.mul
         local.get $6
         i32.add
-        call $~lib/staticarray/StaticArray<f64>#__unchecked_get
+        call $~lib/staticarray/StaticArray<f64>#__uget
         f64.mul
         f64.sub
         local.set $3
@@ -7496,7 +7521,7 @@
       local.get $6
       i32.add
       local.get $3
-      call $~lib/staticarray/StaticArray<f64>#__unchecked_set
+      call $~lib/staticarray/StaticArray<f64>#__uset
       local.get $6
       i32.const 1
       i32.add
@@ -7521,7 +7546,7 @@
       i32.mul
       local.get $4
       i32.add
-      call $~lib/staticarray/StaticArray<f64>#__unchecked_get
+      call $~lib/staticarray/StaticArray<f64>#__uget
       local.set $3
       i32.const 0
       local.set $2
@@ -7539,14 +7564,14 @@
         i32.mul
         local.get $2
         i32.add
-        call $~lib/staticarray/StaticArray<f64>#__unchecked_get
+        call $~lib/staticarray/StaticArray<f64>#__uget
         local.get $0
         local.get $2
         local.get $1
         i32.mul
         local.get $4
         i32.add
-        call $~lib/staticarray/StaticArray<f64>#__unchecked_get
+        call $~lib/staticarray/StaticArray<f64>#__uget
         f64.mul
         f64.sub
         local.set $3
@@ -7570,9 +7595,9 @@
       i32.mul
       local.get $4
       i32.add
-      call $~lib/staticarray/StaticArray<f64>#__unchecked_get
+      call $~lib/staticarray/StaticArray<f64>#__uget
       f64.div
-      call $~lib/staticarray/StaticArray<f64>#__unchecked_set
+      call $~lib/staticarray/StaticArray<f64>#__uset
       local.get $6
       i32.const 1
       i32.add
@@ -7621,6 +7646,7 @@
  (func $~lib/staticarray/StaticArray<~lib/staticarray/StaticArray<f64>>#constructor (param $0 i32) (param $1 i32) (result i32)
   (local $2 i32)
   (local $3 i32)
+  (local $4 i32)
   local.get $1
   i32.const 1073741808
   i32.const 2
@@ -7648,8 +7674,12 @@
   call $~lib/memory/memory.fill
   local.get $3
   call $~lib/rt/pure/__retain
+  local.set $4
+  local.get $0
+  call $~lib/rt/pure/__release
+  local.get $4
  )
- (func $~lib/staticarray/StaticArray<~lib/staticarray/StaticArray<f64>>#__unchecked_set (param $0 i32) (param $1 i32) (param $2 i32)
+ (func $~lib/staticarray/StaticArray<~lib/staticarray/StaticArray<f64>>#__uset (param $0 i32) (param $1 i32) (param $2 i32)
   (local $3 i32)
   (local $4 i32)
   local.get $2
@@ -7683,6 +7713,7 @@
  (func $~lib/staticarray/StaticArray<~lib/staticarray/StaticArray<i32>>#constructor (param $0 i32) (param $1 i32) (result i32)
   (local $2 i32)
   (local $3 i32)
+  (local $4 i32)
   local.get $1
   i32.const 1073741808
   i32.const 2
@@ -7710,8 +7741,12 @@
   call $~lib/memory/memory.fill
   local.get $3
   call $~lib/rt/pure/__retain
+  local.set $4
+  local.get $0
+  call $~lib/rt/pure/__release
+  local.get $4
  )
- (func $~lib/staticarray/StaticArray<~lib/staticarray/StaticArray<i32>>#__unchecked_set (param $0 i32) (param $1 i32) (param $2 i32)
+ (func $~lib/staticarray/StaticArray<~lib/staticarray/StaticArray<i32>>#__uset (param $0 i32) (param $1 i32) (param $2 i32)
   (local $3 i32)
   (local $4 i32)
   local.get $2
@@ -7742,7 +7777,7 @@
   local.get $2
   call $~lib/rt/pure/__release
  )
- (func $~lib/staticarray/StaticArray<~lib/staticarray/StaticArray<i32>>#__unchecked_get (param $0 i32) (param $1 i32) (result i32)
+ (func $~lib/staticarray/StaticArray<~lib/staticarray/StaticArray<i32>>#__uget (param $0 i32) (param $1 i32) (result i32)
   local.get $0
   local.get $1
   i32.const 2
@@ -8029,7 +8064,7 @@
   end
   local.get $0
   local.get $1
-  call $~lib/staticarray/StaticArray<i32>#__unchecked_get
+  call $~lib/staticarray/StaticArray<i32>#__uget
   local.set $2
   i32.const 0
   drop
@@ -8067,7 +8102,7 @@
     local.get $0
     call $~lib/staticarray/StaticArray<i32>#constructor
     local.tee $7
-    call $~lib/staticarray/StaticArray<~lib/staticarray/StaticArray<i32>>#__unchecked_set
+    call $~lib/staticarray/StaticArray<~lib/staticarray/StaticArray<i32>>#__uset
     local.get $7
     call $~lib/rt/pure/__release
     local.get $5
@@ -8089,10 +8124,10 @@
     local.get $1
     local.get $5
     i32.const 0
-    call $~lib/staticarray/StaticArray<i32>#__unchecked_set
+    call $~lib/staticarray/StaticArray<i32>#__uset
     local.get $4
     local.get $5
-    call $~lib/staticarray/StaticArray<~lib/staticarray/StaticArray<i32>>#__unchecked_get
+    call $~lib/staticarray/StaticArray<~lib/staticarray/StaticArray<i32>>#__uget
     local.tee $7
     call $~lib/rt/pure/__retain
     local.set $8
@@ -8126,15 +8161,15 @@
        local.get $8
        local.get $9
        i32.const 1
-       call $~lib/staticarray/StaticArray<i32>#__unchecked_set
+       call $~lib/staticarray/StaticArray<i32>#__uset
        local.get $1
        local.get $5
        local.get $1
        local.get $5
-       call $~lib/staticarray/StaticArray<i32>#__unchecked_get
+       call $~lib/staticarray/StaticArray<i32>#__uget
        i32.const 1
        i32.add
-       call $~lib/staticarray/StaticArray<i32>#__unchecked_set
+       call $~lib/staticarray/StaticArray<i32>#__uset
       end
       local.get $9
       i32.const 1
@@ -8170,11 +8205,11 @@
      local.get $8
      local.get $3
      i32.const 1
-     call $~lib/staticarray/StaticArray<i32>#__unchecked_set
+     call $~lib/staticarray/StaticArray<i32>#__uset
      local.get $1
      local.get $5
      i32.const 1
-     call $~lib/staticarray/StaticArray<i32>#__unchecked_set
+     call $~lib/staticarray/StaticArray<i32>#__uset
     end
     local.get $7
     call $~lib/rt/pure/__release
@@ -8217,7 +8252,7 @@
   end
   local.get $0
   local.get $1
-  call $~lib/staticarray/StaticArray<~lib/staticarray/StaticArray<i32>>#__unchecked_get
+  call $~lib/staticarray/StaticArray<~lib/staticarray/StaticArray<i32>>#__uget
   local.set $2
   i32.const 1
   drop
@@ -8227,8 +8262,6 @@
   local.get $2
   i32.eqz
   if
-   local.get $2
-   call $~lib/rt/pure/__release
    i32.const 6752
    i32.const 240
    i32.const 99
@@ -8238,7 +8271,7 @@
   end
   local.get $2
  )
- (func $~lib/staticarray/StaticArray<~lib/staticarray/StaticArray<f64>>#__unchecked_get (param $0 i32) (param $1 i32) (result i32)
+ (func $~lib/staticarray/StaticArray<~lib/staticarray/StaticArray<f64>>#__uget (param $0 i32) (param $1 i32) (result i32)
   local.get $0
   local.get $1
   i32.const 2
@@ -8281,22 +8314,22 @@
    if
     local.get $1
     local.get $5
-    call $~lib/staticarray/StaticArray<f64>#__unchecked_get
+    call $~lib/staticarray/StaticArray<f64>#__uget
     local.get $3
     local.get $5
-    call $~lib/staticarray/StaticArray<i32>#__unchecked_get
+    call $~lib/staticarray/StaticArray<i32>#__uget
     f64.convert_i32_s
     f64.div
     local.set $7
     local.get $2
     local.get $5
-    call $~lib/staticarray/StaticArray<~lib/staticarray/StaticArray<f64>>#__unchecked_get
+    call $~lib/staticarray/StaticArray<~lib/staticarray/StaticArray<f64>>#__uget
     local.tee $8
     call $~lib/rt/pure/__retain
     local.set $9
     local.get $0
     local.get $5
-    call $~lib/staticarray/StaticArray<~lib/staticarray/StaticArray<i32>>#__unchecked_get
+    call $~lib/staticarray/StaticArray<~lib/staticarray/StaticArray<i32>>#__uget
     local.tee $10
     call $~lib/rt/pure/__retain
     local.set $11
@@ -8311,7 +8344,7 @@
      if
       local.get $11
       local.get $12
-      call $~lib/staticarray/StaticArray<i32>#__unchecked_get
+      call $~lib/staticarray/StaticArray<i32>#__uget
       local.set $14
       local.get $9
       local.get $12
@@ -8326,7 +8359,7 @@
        local.get $7
        f64.mul
       end
-      call $~lib/staticarray/StaticArray<f64>#__unchecked_set
+      call $~lib/staticarray/StaticArray<f64>#__uset
       local.get $12
       i32.const 1
       i32.add
@@ -8393,7 +8426,7 @@
    if
     local.get $1
     local.get $3
-    call $~lib/staticarray/StaticArray<~lib/staticarray/StaticArray<f64>>#__unchecked_get
+    call $~lib/staticarray/StaticArray<~lib/staticarray/StaticArray<f64>>#__uget
     local.tee $10
     call $~lib/rt/pure/__retain
     local.set $11
@@ -8410,12 +8443,12 @@
       local.get $4
       local.get $8
       local.get $4
-      call $~lib/staticarray/StaticArray<f64>#__unchecked_get
+      call $~lib/staticarray/StaticArray<f64>#__uget
       local.get $11
       local.get $4
-      call $~lib/staticarray/StaticArray<f64>#__unchecked_get
+      call $~lib/staticarray/StaticArray<f64>#__uget
       f64.add
-      call $~lib/staticarray/StaticArray<f64>#__unchecked_set
+      call $~lib/staticarray/StaticArray<f64>#__uset
       local.get $4
       i32.const 1
       i32.add
@@ -8445,11 +8478,11 @@
    if
     local.get $0
     local.get $3
-    call $~lib/staticarray/StaticArray<f64>#__unchecked_get
+    call $~lib/staticarray/StaticArray<f64>#__uget
     local.set $7
     local.get $8
     local.get $3
-    call $~lib/staticarray/StaticArray<f64>#__unchecked_get
+    call $~lib/staticarray/StaticArray<f64>#__uget
     local.set $6
     f64.const 1
     global.get $assembly/pagerank/dFactor
@@ -8486,7 +8519,7 @@
     local.get $0
     local.get $3
     local.get $6
-    call $~lib/staticarray/StaticArray<f64>#__unchecked_set
+    call $~lib/staticarray/StaticArray<f64>#__uset
     local.get $3
     i32.const 1
     i32.add
@@ -8549,7 +8582,7 @@
     i32.const 1000
     call $~lib/staticarray/StaticArray<f64>#constructor
     local.tee $7
-    call $~lib/staticarray/StaticArray<~lib/staticarray/StaticArray<f64>>#__unchecked_set
+    call $~lib/staticarray/StaticArray<~lib/staticarray/StaticArray<f64>>#__uset
     local.get $7
     call $~lib/rt/pure/__release
     local.get $5
@@ -8579,7 +8612,7 @@
     i32.const 1000
     f64.convert_i32_s
     f64.div
-    call $~lib/staticarray/StaticArray<f64>#__unchecked_set
+    call $~lib/staticarray/StaticArray<f64>#__uset
     local.get $6
     i32.const 1
     i32.add
@@ -8614,7 +8647,7 @@
       local.get $6
       local.get $9
       local.get $10
-      call $~lib/staticarray/StaticArray<i32>#__unchecked_get
+      call $~lib/staticarray/StaticArray<i32>#__uget
       i32.add
       local.set $6
       local.get $10
@@ -8686,15 +8719,6 @@
   local.get $14
  )
  (func $assembly/spmv/Csr#constructor (param $0 i32) (param $1 i32) (param $2 i32) (param $3 f64) (param $4 f64) (param $5 f64) (param $6 i32) (param $7 f64) (param $8 i32) (param $9 i32) (param $10 i32) (result i32)
-  local.get $8
-  call $~lib/rt/pure/__retain
-  local.set $8
-  local.get $9
-  call $~lib/rt/pure/__retain
-  local.set $9
-  local.get $10
-  call $~lib/rt/pure/__retain
-  local.set $10
   local.get $0
   i32.eqz
   if
@@ -8738,6 +8762,15 @@
   call $~lib/rt/pure/__retain
   i32.store offset=56
   local.get $8
+  call $~lib/rt/pure/__retain
+  local.set $8
+  local.get $9
+  call $~lib/rt/pure/__retain
+  local.set $9
+  local.get $10
+  call $~lib/rt/pure/__retain
+  local.set $10
+  local.get $8
   call $~lib/rt/pure/__release
   local.get $9
   call $~lib/rt/pure/__release
@@ -8748,6 +8781,7 @@
  (func $~lib/staticarray/StaticArray<u32>#constructor (param $0 i32) (param $1 i32) (result i32)
   (local $2 i32)
   (local $3 i32)
+  (local $4 i32)
   local.get $1
   i32.const 1073741808
   i32.const 2
@@ -8775,10 +8809,15 @@
   call $~lib/memory/memory.fill
   local.get $3
   call $~lib/rt/pure/__retain
+  local.set $4
+  local.get $0
+  call $~lib/rt/pure/__release
+  local.get $4
  )
  (func $~lib/staticarray/StaticArray<f32>#constructor (param $0 i32) (param $1 i32) (result i32)
   (local $2 i32)
   (local $3 i32)
+  (local $4 i32)
   local.get $1
   i32.const 1073741808
   i32.const 2
@@ -8806,8 +8845,12 @@
   call $~lib/memory/memory.fill
   local.get $3
   call $~lib/rt/pure/__retain
+  local.set $4
+  local.get $0
+  call $~lib/rt/pure/__release
+  local.get $4
  )
- (func $~lib/staticarray/StaticArray<u32>#__unchecked_set (param $0 i32) (param $1 i32) (param $2 i32)
+ (func $~lib/staticarray/StaticArray<u32>#__uset (param $0 i32) (param $1 i32) (param $2 i32)
   i32.const 0
   drop
   local.get $0
@@ -8823,6 +8866,24 @@
   (local $4 i32)
   (local $5 i32)
   (local $6 i32)
+  local.get $0
+  i32.eqz
+  if
+   i32.const 12
+   i32.const 2
+   call $~lib/rt/tlsf/__alloc
+   call $~lib/rt/pure/__retain
+   local.set $0
+  end
+  local.get $0
+  i32.const 0
+  i32.store
+  local.get $0
+  i32.const 0
+  i32.store offset=4
+  local.get $0
+  i32.const 0
+  i32.store offset=8
   local.get $1
   i32.const 1073741808
   local.get $2
@@ -8847,24 +8908,6 @@
   i32.const 0
   local.get $1
   call $~lib/memory/memory.fill
-  local.get $0
-  i32.eqz
-  if
-   i32.const 12
-   i32.const 2
-   call $~lib/rt/tlsf/__alloc
-   call $~lib/rt/pure/__retain
-   local.set $0
-  end
-  local.get $0
-  i32.const 0
-  i32.store
-  local.get $0
-  i32.const 0
-  i32.store offset=4
-  local.get $0
-  i32.const 0
-  i32.store offset=8
   local.get $0
   local.tee $4
   local.get $3
@@ -8892,14 +8935,15 @@
  )
  (func $~lib/typedarray/Int8Array#constructor (param $0 i32) (param $1 i32) (result i32)
   local.get $0
-  if (result i32)
-   local.get $0
-  else
+  i32.eqz
+  if
    i32.const 12
    i32.const 21
    call $~lib/rt/tlsf/__alloc
    call $~lib/rt/pure/__retain
+   local.set $0
   end
+  local.get $0
   local.get $1
   i32.const 0
   call $~lib/arraybuffer/ArrayBufferView#constructor
@@ -9952,7 +9996,7 @@
     local.get $0
     i32.load offset=4
     local.get $2
-    call $~lib/staticarray/StaticArray<f64>#__unchecked_get
+    call $~lib/staticarray/StaticArray<f64>#__uget
     f64.mul
     local.set $3
     local.get $2
@@ -10015,7 +10059,7 @@
     local.get $0
     i32.load offset=8
     local.get $2
-    call $~lib/staticarray/StaticArray<f64>#__unchecked_get
+    call $~lib/staticarray/StaticArray<f64>#__uget
     local.get $0
     call $assembly/spmv/Ziggurat#UNI
     local.get $0
@@ -10023,13 +10067,13 @@
     local.get $2
     i32.const 1
     i32.sub
-    call $~lib/staticarray/StaticArray<f64>#__unchecked_get
+    call $~lib/staticarray/StaticArray<f64>#__uget
     f64.mul
     f64.add
     local.get $0
     i32.load offset=8
     local.get $2
-    call $~lib/staticarray/StaticArray<f64>#__unchecked_get
+    call $~lib/staticarray/StaticArray<f64>#__uget
     f64.sub
     f64.const -0.5
     local.get $3
@@ -10057,7 +10101,7 @@
     local.get $0
     i32.load offset=12
     local.get $2
-    call $~lib/staticarray/StaticArray<f64>#__unchecked_get
+    call $~lib/staticarray/StaticArray<f64>#__uget
     f64.lt
     if
      local.get $1
@@ -10065,7 +10109,7 @@
      local.get $0
      i32.load offset=4
      local.get $2
-     call $~lib/staticarray/StaticArray<f64>#__unchecked_get
+     call $~lib/staticarray/StaticArray<f64>#__uget
      f64.mul
      return
     end
@@ -10093,7 +10137,7 @@
   local.get $0
   i32.load offset=12
   local.get $2
-  call $~lib/staticarray/StaticArray<f64>#__unchecked_get
+  call $~lib/staticarray/StaticArray<f64>#__uget
   f64.lt
   if (result f64)
    local.get $1
@@ -10101,7 +10145,7 @@
    local.get $0
    i32.load offset=4
    local.get $2
-   call $~lib/staticarray/StaticArray<f64>#__unchecked_get
+   call $~lib/staticarray/StaticArray<f64>#__uget
    f64.mul
   else
    local.get $0
@@ -10118,7 +10162,7 @@
   global.get $assembly/spmv/gaussian
   call $assembly/spmv/Ziggurat#nextGaussian
  )
- (func $~lib/staticarray/StaticArray<u32>#__unchecked_get (param $0 i32) (param $1 i32) (result i32)
+ (func $~lib/staticarray/StaticArray<u32>#__uget (param $0 i32) (param $1 i32) (result i32)
   local.get $0
   local.get $1
   i32.const 2
@@ -10165,7 +10209,7 @@
   end
   local.get $0
   local.get $1
-  call $~lib/staticarray/StaticArray<u32>#__unchecked_get
+  call $~lib/staticarray/StaticArray<u32>#__uget
   local.set $2
   i32.const 0
   drop
@@ -10814,7 +10858,7 @@
   local.get $1
   call $~lib/array/Array<u32>#sort
  )
- (func $~lib/array/Array<u32>#__unchecked_get (param $0 i32) (param $1 i32) (result i32)
+ (func $~lib/array/Array<u32>#__uget (param $0 i32) (param $1 i32) (result i32)
   local.get $0
   i32.load offset=4
   local.get $1
@@ -10856,8 +10900,8 @@
     local.get $5
     local.get $1
     i32.sub
-    call $~lib/array/Array<u32>#__unchecked_get
-    call $~lib/staticarray/StaticArray<u32>#__unchecked_set
+    call $~lib/array/Array<u32>#__uget
+    call $~lib/staticarray/StaticArray<u32>#__uset
     local.get $5
     i32.const 1
     i32.add
@@ -10872,7 +10916,7 @@
   local.get $0
   call $~lib/rt/pure/__release
  )
- (func $~lib/staticarray/StaticArray<f32>#__unchecked_set (param $0 i32) (param $1 i32) (param $2 f32)
+ (func $~lib/staticarray/StaticArray<f32>#__uset (param $0 i32) (param $1 i32) (param $2 f32)
   i32.const 0
   drop
   local.get $0
@@ -10883,7 +10927,7 @@
   local.get $2
   f32.store
  )
- (func $~lib/staticarray/StaticArray<f32>#__unchecked_get (param $0 i32) (param $1 i32) (result f32)
+ (func $~lib/staticarray/StaticArray<f32>#__uget (param $0 i32) (param $1 i32) (result f32)
   local.get $0
   local.get $1
   i32.const 2
@@ -10987,7 +11031,7 @@
   i32.load offset=48
   i32.const 0
   i32.const 0
-  call $~lib/staticarray/StaticArray<u32>#__unchecked_set
+  call $~lib/staticarray/StaticArray<u32>#__uset
   i32.const 2
   f64.convert_i32_s
   local.get $14
@@ -11072,18 +11116,18 @@
     local.get $14
     i32.load offset=48
     local.get $19
-    call $~lib/staticarray/StaticArray<u32>#__unchecked_get
+    call $~lib/staticarray/StaticArray<u32>#__uget
     f64.convert_i32_u
     local.get $3
     f64.add
     i32.trunc_f64_u
-    call $~lib/staticarray/StaticArray<u32>#__unchecked_set
+    call $~lib/staticarray/StaticArray<u32>#__uset
     local.get $14
     i32.load offset=48
     local.get $19
     i32.const 1
     i32.add
-    call $~lib/staticarray/StaticArray<u32>#__unchecked_get
+    call $~lib/staticarray/StaticArray<u32>#__uget
     local.get $14
     i32.load offset=32
     i32.gt_s
@@ -11100,7 +11144,7 @@
      local.get $19
      i32.const 1
      i32.add
-     call $~lib/staticarray/StaticArray<u32>#__unchecked_get
+     call $~lib/staticarray/StaticArray<u32>#__uget
      call $~lib/staticarray/StaticArray<u32>#constructor
      local.set $23
      local.get $22
@@ -11125,8 +11169,8 @@
        local.get $23
        local.get $21
        local.get $23
-       call $~lib/staticarray/StaticArray<u32>#__unchecked_get
-       call $~lib/staticarray/StaticArray<u32>#__unchecked_set
+       call $~lib/staticarray/StaticArray<u32>#__uget
+       call $~lib/staticarray/StaticArray<u32>#__uset
        local.get $23
        i32.const 1
        i32.add
@@ -11263,11 +11307,11 @@
        local.get $14
        i32.load offset=48
        local.get $19
-       call $~lib/staticarray/StaticArray<u32>#__unchecked_get
+       call $~lib/staticarray/StaticArray<u32>#__uget
        local.get $21
        i32.add
        local.get $4
-       call $~lib/staticarray/StaticArray<u32>#__unchecked_set
+       call $~lib/staticarray/StaticArray<u32>#__uset
        local.get $18
        local.get $4
        i32.const 1
@@ -11305,7 +11349,7 @@
   i32.load offset=48
   local.get $14
   i32.load
-  call $~lib/staticarray/StaticArray<u32>#__unchecked_get
+  call $~lib/staticarray/StaticArray<u32>#__uget
   i32.store offset=32
   local.get $14
   local.get $14
@@ -11400,12 +11444,12 @@
     f64.mul
     f64.sub
     f32.demote_f64
-    call $~lib/staticarray/StaticArray<f32>#__unchecked_set
+    call $~lib/staticarray/StaticArray<f32>#__uset
     loop $while-continue|5
      local.get $14
      i32.load offset=56
      local.get $24
-     call $~lib/staticarray/StaticArray<f32>#__unchecked_get
+     call $~lib/staticarray/StaticArray<f32>#__uget
      f32.const 0
      f32.eq
      local.set $19
@@ -11455,7 +11499,7 @@
       f64.mul
       f64.sub
       f32.demote_f64
-      call $~lib/staticarray/StaticArray<f32>#__unchecked_set
+      call $~lib/staticarray/StaticArray<f32>#__uset
       br $while-continue|5
      end
     end
@@ -11517,17 +11561,17 @@
    if
     local.get $5
     local.get $10
-    call $~lib/staticarray/StaticArray<f32>#__unchecked_get
+    call $~lib/staticarray/StaticArray<f32>#__uget
     local.set $9
     local.get $2
     local.get $10
-    call $~lib/staticarray/StaticArray<u32>#__unchecked_get
+    call $~lib/staticarray/StaticArray<u32>#__uget
     local.set $7
     local.get $2
     local.get $10
     i32.const 1
     i32.add
-    call $~lib/staticarray/StaticArray<u32>#__unchecked_get
+    call $~lib/staticarray/StaticArray<u32>#__uget
     local.set $8
     local.get $7
     local.set $12
@@ -11541,12 +11585,12 @@
       local.get $9
       local.get $0
       local.get $12
-      call $~lib/staticarray/StaticArray<f32>#__unchecked_get
+      call $~lib/staticarray/StaticArray<f32>#__uget
       local.get $4
       local.get $3
       local.get $12
-      call $~lib/staticarray/StaticArray<u32>#__unchecked_get
-      call $~lib/staticarray/StaticArray<f32>#__unchecked_get
+      call $~lib/staticarray/StaticArray<u32>#__uget
+      call $~lib/staticarray/StaticArray<f32>#__uget
       f32.mul
       f32.add
       local.set $9
@@ -11560,7 +11604,7 @@
     local.get $6
     local.get $10
     local.get $9
-    call $~lib/staticarray/StaticArray<f32>#__unchecked_set
+    call $~lib/staticarray/StaticArray<f32>#__uset
     local.get $10
     i32.const 1
     i32.add
@@ -11660,7 +11704,7 @@
     f64.mul
     f64.sub
     f32.demote_f64
-    call $~lib/staticarray/StaticArray<f32>#__unchecked_set
+    call $~lib/staticarray/StaticArray<f32>#__uset
     local.get $4
     i32.const 1
     i32.add
