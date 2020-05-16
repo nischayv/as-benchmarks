@@ -1,4 +1,4 @@
 .idea
 experiments.iml
-node_modules
-computation/*/node_modules
+computation/node_modules
+graphics/*/node_modules

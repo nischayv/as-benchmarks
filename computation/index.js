@@ -2,7 +2,7 @@ import { generateBarGraph, generateLineGraph, toggleSpinner } from './chart'
 import jsFunctions from './js'
 import { mean } from 'stats-lite'
 
-let wasmInstance;
+let wasmInstance
 
 const fetchWasm = async () => {
   const imports = {
@@ -29,7 +29,7 @@ const fetchWasm = async () => {
       wasmInstance = await WebAssembly.instantiate(await (await response).arrayBuffer(), imports)
     }
   } catch (e) {
-    console.error('Can\'t instantiate WebAssembly module.\n', e);
+    console.error(`Can't instantiate WebAssembly module.\n`, e)
   }
 }
 
@@ -73,7 +73,7 @@ export const inputHandler = (e) => {
 }
 
 export const runBenchmark = () => {
-  if (!wasmInstance) return;
+  if (!wasmInstance) return
 
   const option = document.getElementById('selectedOption').value
   const iterations = document.getElementById('iterations').value

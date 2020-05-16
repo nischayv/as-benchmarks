@@ -9,6 +9,7 @@ class PolarArray {
   constructor(public r: StaticArray<f64>, public i: StaticArray<f64>) {}
 }
 
+// @ts-ignore: decorator
 @inline
 function complexPolar(r: f64, t: f64): Polar {
   NativeMath.sincos(t)
@@ -21,12 +22,12 @@ function fftSimple(r: StaticArray<f64>, i: StaticArray<f64>): PolarArray {
   const I = new StaticArray<f64>(N)
 
   if (N === 1) {
-    unchecked(R[0] = r[0])
-    unchecked(I[0] = i[0])
+    unchecked((R[0] = r[0]))
+    unchecked((I[0] = i[0]))
     return new PolarArray(R, I)
   }
 
-  let len = N / 2
+  const len = N / 2
   const er = new StaticArray<f64>(len)
   const ei = new StaticArray<f64>(len)
   const dr = new StaticArray<f64>(len)
@@ -55,10 +56,10 @@ function fftSimple(r: StaticArray<f64>, i: StaticArray<f64>): PolarArray {
   }
 
   for (let k = 0; k < len; ++k) {
-    let er = unchecked(ER[k])
-    let dr = unchecked(DR[k])
-    let ei = unchecked(EI[k])
-    let di = unchecked(DI[k])
+    const er = unchecked(ER[k])
+    const dr = unchecked(DR[k])
+    const ei = unchecked(EI[k])
+    const di = unchecked(DI[k])
     unchecked((R[k] = er + dr))
     unchecked((I[k] = ei + di))
 
