@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Starfield</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+</head>
+
+<body>
+
+<div class="d-flex flex-column align-items-center container p-4">
+    <label for="selectedOption">Choose language</label>
+    <select id="selectedOption" class="form-control mb-4">
+        <option>Javascript</option>
+        <option>Assemblyscript</option>
+    </select>
+    <h2>FPS: <span id="fps" class="badge badge-secondary">0</span></h2>
+    <canvas id="starfield" width="800" height="800" style="background-color: black"></canvas>
+</div>
+<script src="./bundle.js"></script>
+
+</body>
+</html>

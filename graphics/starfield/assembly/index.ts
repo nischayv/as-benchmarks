@@ -1,3 +1,5 @@
+memory.grow(1)
+
 class Star {
   constructor(
     public x: f64 = 0.0,
@@ -9,10 +11,10 @@ class Star {
 }
 
 let count: i32 = 0
-let stars = new StaticArray<Star>(1000)
+let stars = new StaticArray<Star>(750)
 
 export function addStar(): void {
-  if (count < 1000) {
+  if (count < 750) {
     // create a new star in the middle with random velocity
     // add the star to the array
     unchecked((stars[count] = new Star()))
@@ -36,23 +38,14 @@ export function updateStars(): void {
   }
 }
 
-export function getStarsLength(): i32 {
-  return count
-}
-
-export function getStarX(i: i32): f64 {
-  return unchecked(stars[i].x)
-}
-
-export function getStarY(i: i32): f64 {
-  return unchecked(stars[i].y)
-}
-
-export function getStarColor(i: i32): f64 {
-  return unchecked(stars[i].color)
+export function setStar(i: i32): void {
+  const star = unchecked(stars[i])
+  store<f64>(0, star.x)
+  store<f64>(8, star.y)
+  store<f64>(16, star.color)
 }
 
 export function clear(): void {
-  stars = new StaticArray<Star>(1000)
+  stars = new StaticArray<Star>(750)
   count = 0
 }

@@ -4,8 +4,7 @@ export class Starfield {
   }
 
   addStar() {
-    if (this.stars.length < 1000) {
-      // if fewer than 300 stars, a 50% chance of creating a new one
+    if (this.stars.length < 750) {
       // create a new star in the middle with random velocity
       const star = {
         x: 0,
@@ -34,20 +33,9 @@ export class Starfield {
     }
   }
 
-  getStarsLength() {
-    return this.stars.length
-  }
-
-  getStarX(i) {
-    return this.stars[i].x
-  }
-
-  getStarY(i) {
-    return this.stars[i].y
-  }
-
-  getStarColor(i) {
-    return this.stars[i].color
+  getStar(i) {
+    const { x, y, color } = this.stars[i]
+    return [x, y, color]
   }
 
   clear() {

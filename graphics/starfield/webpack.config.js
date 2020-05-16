@@ -7,12 +7,15 @@ module.exports = {
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist'),
-    publicPath: '/',
-    library: 'EntryPoint'
+    publicPath: '/'
   },
   plugins: [
-    new CopyWebpackPlugin([{ from: path.resolve(__dirname, 'index.html'), to: path.resolve(__dirname, 'dist') }]),
-    new CopyWebpackPlugin([{ from: path.resolve(__dirname, 'build'), to: path.resolve(__dirname, 'dist/build') }])
+    new CopyWebpackPlugin([
+      { from: path.resolve(__dirname, 'index.html'), to: path.resolve(__dirname, 'dist') }
+    ]),
+    new CopyWebpackPlugin([
+      { from: path.resolve(__dirname, 'build'), to: path.resolve(__dirname, 'dist/build') }
+    ])
   ],
   devServer: {
     open: true,

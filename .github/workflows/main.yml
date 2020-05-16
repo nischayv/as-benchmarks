@@ -26,12 +26,18 @@ jobs:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
 
-    # Runs a single command using the runners shell
     - working-directory: './computation'
-      name: Install
+      name: Install (Computation)
       run: npm install
 
-    # Runs a set of commands using the runners shell
     - working-directory: './computation'
-      name: Lint
+      name: Lint (Computation)
+      run: npm run lint
+
+    - working-directory: './graphics/starfield'
+      name: Install (Starfield)
+      run: npm install
+
+    - working-directory: './graphics/starfield'
+      name: Lint (Starfield)
       run: npm run lint
