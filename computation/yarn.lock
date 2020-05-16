@@ -444,12 +444,12 @@ asn1.js@^4.0.0:
     inherits "^2.0.1"
     minimalistic-assert "^1.0.0"
 
-assemblyscript@^0.9.4-nightly.20200430:
-  version "0.9.4-nightly.20200430"
-  resolved "https://registry.yarnpkg.com/assemblyscript/-/assemblyscript-0.9.4-nightly.20200430.tgz#050bf44f48c887875ecfea6cd11f48ea0125de4c"
-  integrity sha512-vXVDKxL5G9BNBBzu//W9czx4R14QIH/gedtogRtstmeABx54yjxTXKtDROGh+u3Z66V3CHTsERICAsJNh8IN9g==
+assemblyscript@^0.10.0:
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/assemblyscript/-/assemblyscript-0.10.0.tgz#0d2a0591be77fdd294d720172e307e526a559ba8"
+  integrity sha512-ErUNhHboD+zsB4oG6X1YICDAIo27Gq7LeNX6jVe+Q0W5cI51/fHwC8yJ68IukqvupmZgYPdp1JqqRXlS+BrUfA==
   dependencies:
-    binaryen "92.0.0-nightly.20200426"
+    binaryen "93.0.0-nightly.20200514"
     long "^4.0.0"
 
 assert@^1.1.1:
@@ -535,10 +535,10 @@ binary-extensions@^2.0.0:
   resolved "https://registry.yarnpkg.com/binary-extensions/-/binary-extensions-2.0.0.tgz#23c0df14f6a88077f5f986c0d167ec03c3d5537c"
   integrity sha512-Phlt0plgpIIBOGTT/ehfFnbNlfsDEiqmzE2KRXoX1bLIlir4X/MR+zSyBEkL05ffWgnRSf/DXv+WrUAVr93/ow==
 
-binaryen@92.0.0-nightly.20200426:
-  version "92.0.0-nightly.20200426"
-  resolved "https://registry.yarnpkg.com/binaryen/-/binaryen-92.0.0-nightly.20200426.tgz#06001c7284e261dff808753a631b06eef87636e0"
-  integrity sha512-e9aKrfV8MBFjLBITaY89/ulGhZ0AQ9RDb0B4ZGg7Qe3fM445JNiQh6Dc2k0+wTAU95oUAY0uGnNEIGUtEnirag==
+binaryen@93.0.0-nightly.20200514:
+  version "93.0.0-nightly.20200514"
+  resolved "https://registry.yarnpkg.com/binaryen/-/binaryen-93.0.0-nightly.20200514.tgz#af498b5d9f8169254fb0cd385061d94ba9b27b1d"
+  integrity sha512-SRRItmNvhRVfoWWbRloO4i8IqkKH8rZ7/0QWRgLpM3umupK8gBpo9MY7Zp3pDysRSp+rVoqxvM5x4tFyCSa9zw==
 
 bindings@^1.5.0:
   version "1.5.0"
