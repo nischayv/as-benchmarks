@@ -25,7 +25,6 @@
  (global $~lib/math/random_state0_64 (mut i64) (i64.const 0))
  (global $~lib/math/random_state1_64 (mut i64) (i64.const 0))
  (global $~lib/rt/__rtti_base i32 (i32.const 1248))
- (export "__setArgumentsLength" (func $~setArgumentsLength))
  (export "memory" (memory $0))
  (export "__alloc" (func $~lib/rt/tlsf/__alloc))
  (export "__retain" (func $~lib/rt/pure/__retain))
@@ -1091,9 +1090,6 @@
   f64.reinterpret_i64
   f64.const 1
   f64.sub
- )
- (func $~setArgumentsLength (param $0 i32)
-  nop
  )
  (func $assembly/index/addStar
   (local $0 i32)

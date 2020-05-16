@@ -38,7 +38,6 @@
  (global $~argumentsLength (mut i32) (i32.const 0))
  (global $~lib/rt/__rtti_base i32 (i32.const 336))
  (global $~lib/heap/__heap_base i32 (i32.const 380))
- (export "__setArgumentsLength" (func $~setArgumentsLength))
  (export "memory" (memory $0))
  (export "__alloc" (func $~lib/rt/tlsf/__alloc))
  (export "__retain" (func $~lib/rt/pure/__retain))
@@ -1766,6 +1765,7 @@
  (func $~lib/staticarray/StaticArray<assembly/index/Star>#constructor (param $0 i32) (param $1 i32) (result i32)
   (local $2 i32)
   (local $3 i32)
+  (local $4 i32)
   local.get $1
   i32.const 1073741808
   i32.const 2
@@ -1793,6 +1793,10 @@
   call $~lib/memory/memory.fill
   local.get $3
   call $~lib/rt/pure/__retain
+  local.set $4
+  local.get $0
+  call $~lib/rt/pure/__release
+  local.get $4
  )
  (func $start:assembly/index
   i32.const 1
@@ -2042,11 +2046,7 @@
   local.get $5
   call $assembly/index/Star#constructor
  )
- (func $~setArgumentsLength (param $0 i32)
-  local.get $0
-  global.set $~argumentsLength
- )
- (func $~lib/staticarray/StaticArray<assembly/index/Star>#__unchecked_set (param $0 i32) (param $1 i32) (param $2 i32)
+ (func $~lib/staticarray/StaticArray<assembly/index/Star>#__uset (param $0 i32) (param $1 i32) (param $2 i32)
   (local $3 i32)
   (local $4 i32)
   local.get $2
@@ -2095,7 +2095,7 @@
    f64.const 0
    call $assembly/index/Star#constructor@varargs
    local.tee $0
-   call $~lib/staticarray/StaticArray<assembly/index/Star>#__unchecked_set
+   call $~lib/staticarray/StaticArray<assembly/index/Star>#__uset
    global.get $assembly/index/count
    i32.const 1
    i32.add
@@ -2104,7 +2104,7 @@
    call $~lib/rt/pure/__release
   end
  )
- (func $~lib/staticarray/StaticArray<assembly/index/Star>#__unchecked_get (param $0 i32) (param $1 i32) (result i32)
+ (func $~lib/staticarray/StaticArray<assembly/index/Star>#__uget (param $0 i32) (param $1 i32) (result i32)
   local.get $0
   local.get $1
   i32.const 2
@@ -2130,7 +2130,7 @@
    if
     global.get $assembly/index/stars
     local.get $0
-    call $~lib/staticarray/StaticArray<assembly/index/Star>#__unchecked_get
+    call $~lib/staticarray/StaticArray<assembly/index/Star>#__uget
     local.tee $2
     call $~lib/rt/pure/__retain
     local.set $3
@@ -2203,7 +2203,7 @@
   (local $2 i32)
   global.get $assembly/index/stars
   local.get $0
-  call $~lib/staticarray/StaticArray<assembly/index/Star>#__unchecked_get
+  call $~lib/staticarray/StaticArray<assembly/index/Star>#__uget
   local.tee $1
   call $~lib/rt/pure/__retain
   local.set $2
