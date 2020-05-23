@@ -41,3 +41,11 @@ jobs:
     - working-directory: './graphics/starfield'
       name: Lint (Starfield)
       run: npm run lint
+
+    - working-directory: './graphics/fire'
+      name: Install (Fire Effect)
+      run: npm install
+
+    - working-directory: './graphics/fire'
+      name: Lint (Fire Effect)
+      run: npm run lint

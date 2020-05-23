@@ -2,11 +2,12 @@ import { FireEffect } from './js'
 
 const canvas = document.getElementById('fire')
 const context = canvas.getContext('2d')
+const width = 1500
+const height = 400
+const imgData = context.createImageData(width, height)
 const fpsElement = document.getElementById('fps')
 const option = document.getElementById('selectedOption')
 const fireEffectJs = new FireEffect()
-const width = 100
-const height = 80
 let wasmInstance
 let fireEffect
 let lastOption
@@ -23,12 +24,12 @@ const fetchWasm = async () => {
         console.error(`Abort called at ${_file}:${line}:${column}`)
       },
       seed() {
-        return Math.random()
+        return Math.random() * 1e64
       }
     }
   }
 
-  // Instantiate our wasm module
+  // Instantiate wasm module
   try {
     const response = fetch('build/optimized.wasm')
     if (typeof WebAssembly.instantiateStreaming === 'function') {
@@ -38,7 +39,7 @@ const fetchWasm = async () => {
     }
     const { memory, getDataBuffer } = wasmInstance.instance.exports
     const offset = getDataBuffer()
-    wasmByteMemoryArray = new Uint8Array(memory.buffer, offset, height * width)
+    wasmByteMemoryArray = new Uint8Array(memory.buffer, offset, height * width * 4)
   } catch (e) {
     console.error(`Can't instantiate WebAssembly module.\n`, e)
   }
@@ -70,15 +71,8 @@ const animate = () => {
 
   fireEffect.updateScreen()
   const fire = option.value === 'Javascript' ? fireEffect.getFire() : wasmByteMemoryArray
-
-  for(let i = height * 5; i < width * height; i++) {
-    context.beginPath()
-    // convert the index value i to screen coordinates and draw a box
-    context.rect((i % width) * 10, (height - Math.floor(i / width)) * 10, 10, 10)
-    // the red component of the RGB color is the value of the cell.
-    context.fillStyle = `rgb(${fire[i]},0,0)`
-    context.fill()
-  }
+  imgData.data.set(fire)
+  context.putImageData(imgData, 0, 0)
 
   updateFPS()
 }
