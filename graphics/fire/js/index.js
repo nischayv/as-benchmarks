@@ -9,7 +9,6 @@ export class FireEffect {
     for (let i = 0; i < this.width; i++) {
       // randomize the 2nd row from the bottom
       const index = (this.width * (this.height - 2) + i) << 2
-      // console.log(index)
       this.fire[index] = Math.floor(Math.random() * 255)
       this.fire[index + 1] = 0
       this.fire[index + 2] = 0
