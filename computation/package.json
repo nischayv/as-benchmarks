@@ -10,7 +10,7 @@
     "lint": "eslint '*/*.{js,ts}' --quiet --fix"
   },
   "dependencies": {
-    "chart.js": "^2.9.3",
+    "chart.js": "^2.9.4",
     "stats-lite": "^2.2.0"
   },
   "devDependencies": {
